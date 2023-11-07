@@ -1,4 +1,3 @@
-
 DROP TABLE IF EXISTS Drivers;
 DROP TABLE IF EXISTS ParkingLots;
 DROP TABLE IF EXISTS Zones;
@@ -10,61 +9,56 @@ DROP TABLE IF EXISTS Citations;
 DROP TABLE IF EXISTS ParkingActivity;
 
 CREATE TABLE Drivers (
-ID VARCHAR(10) NOT NULL,
-Name VARCHAR(128) NOT NULL,
-Status ENUM('S', 'E', 'V') NOT NULL,
-isDisabled BOOLEAN NOT NULL,
-PRIMARY KEY(ID)
+	ID VARCHAR(10) NOT NULL,
+	Name VARCHAR(128) NOT NULL,
+	Status ENUM('S', 'E', 'V') NOT NULL,
+	isDisabled BOOLEAN NOT NULL,
+	PRIMARY KEY(ID)
 );
 
 CREATE TABLE ParkingLots (
-LotName VARCHAR(128) NOT NULL,
-Address VARCHAR(256) NOT NULL,
-PRIMARY KEY(LotName)
+	LotName VARCHAR(128) NOT NULL,
+	Address VARCHAR(256) NOT NULL,
+	PRIMARY KEY(LotName)
 );
 
 CREATE TABLE Zones(
-ZoneID VARCHAR(10) NOT NULL,
-LotName VARCHAR(128) NOT NULL,
-PRIMARY KEY(ZoneID, LotName),
-FOREIGN KEY(LotName) 
-REFERENCES ParkingLots(LotName) 
-ON DELETE CASCADE ON UPDATE CASCADE
-NOT NULL
+	ZoneID VARCHAR(10) NOT NULL,
+	LotName VARCHAR(128) NOT NULL,
+	PRIMARY KEY(ZoneID, LotName),
+	FOREIGN KEY(LotName) 
+		REFERENCES ParkingLots(LotName) 
+		ON DELETE CASCADE ON UPDATE CASCADE
 );
+
 CREATE TABLE Spaces(
-Number INT NOT NULL,
-SpaceType ENUM('electric', 'handicap', 'compact car', 'regular')
-NOT NULL DEFAULT 'regular',
-ZoneID VARCHAR(10) NOT NULL, 
-LotName VARCHAR (128) NOT NULL,
-PRIMARY KEY(Number, ZoneID, LotName),
-FOREIGN KEY (ZoneID, LotName) 
-REFERENCES Zones(ZoneID, LotName) 
-ON DELETE CASCADE ON UPDATE CASCADE
-NOT NULL
+	Number INT NOT NULL,
+	SpaceType ENUM('electric', 'handicap', 'compact car', 'regular') NOT NULL DEFAULT 'regular',
+	ZoneID VARCHAR(10) NOT NULL, 
+	LotName VARCHAR (128) NOT NULL,
+	PRIMARY KEY(Number, ZoneID, LotName),
+	FOREIGN KEY (ZoneID, LotName) 
+		REFERENCES Zones(ZoneID, LotName) 
+		ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE Permits(
-PermitID VARCHAR(10) NOT NULL,
-ID VARCHAR(10) NOT NULL,
-ZoneID VARCHAR(10) NOT NULL, 
-LotName VARCHAR (128) NOT NULL,
-SpaceType ENUM('electric', 'handicap', 'compact car', 'regular')
-NOT NULL DEFAULT 'regular',
-PermitType ENUM('residential', 'commuter', 'peak hours', 'special event','park & ride') NOT NULL,
-StartDate DATE NOT NULL,
-ExpDate DATE NOT NULL,
-ExpTime TIME NOT NULL,
-PRIMARY KEY(PermitID),
-FOREIGN KEY (ID) 
-REFERENCES Drivers(ID) 
-ON DELETE CASCADE ON UPDATE CASCADE
-NOT NULL,
-FOREIGN KEY (ZoneID, LotName) 
-REFERENCES Zones(ZoneID, LotName) 
-ON DELETE CASCADE ON UPDATE CASCADE
-NOT NULL
+	PermitID VARCHAR(10) NOT NULL,
+	ID VARCHAR(10) NOT NULL,
+	ZoneID VARCHAR(10) NOT NULL, 
+	LotName VARCHAR (128) NOT NULL,
+	SpaceType ENUM('electric', 'handicap', 'compact car', 'regular') NOT NULL DEFAULT 'regular',
+	PermitType ENUM('residential', 'commuter', 'peak hours', 'special event','park & ride') NOT NULL,
+	StartDate DATE NOT NULL,
+	ExpDate DATE NOT NULL,
+	ExpTime TIME NOT NULL,
+	PRIMARY KEY(PermitID),
+	FOREIGN KEY (ID) 
+		REFERENCES Drivers(ID) 
+		ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (ZoneID, LotName) 
+		REFERENCES Zones(ZoneID, LotName) 
+		ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE ModelInfo(
@@ -76,35 +70,33 @@ CREATE TABLE ModelInfo(
 CREATE TABLE Vehicles(
 	Plate VARCHAR(20) NOT NULL,
 	ID VARCHAR(10) NOT NULL,
-PermitID VARCHAR(10) NOT NULL,
-Year YEAR NOT NULL,
-	Model VARCHAR(128) NOT NULL,
+	PermitID VARCHAR(10) NOT NULL,
+	Year YEAR,
+	Color VARCHAR(20),
+	Model VARCHAR(128),
 	PRIMARY KEY (Plate),
-FOREIGN KEY (Model) 
-REFERENCES ModelInfo(Model) 
-ON DELETE CASCADE ON UPDATE CASCADE
-NOT NULL
+	FOREIGN KEY (Model) 
+		REFERENCES ModelInfo(Model) 
+		ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE Citations(
-CitationID VARCHAR(10) NOT NULL,
-Plate VARCHAR(20) NOT NULL,
-Number INT NOT NULL,
-ZoneID VARCHAR(10) NOT NULL, 
-LotName VARCHAR(128) NOT NULL,
-PayStatus ENUM('unpaid', 'paid', 'appealed', 'invalid') DEFAULT 'unpaid' NOT NULL,
-Fee FLOAT NOT NULL,
-CitationDate DATE NOT NULL,
-CitationTime TIME NOT NULL,
-PRIMARY KEY(CitationID),
-FOREIGN KEY (Plate) 
-REFERENCES Vehicles(Plate) 
-ON UPDATE CASCADE
-NOT NULL,
-FOREIGN KEY (Number, ZoneID, LotName) 
-REFERENCES Spaces(Number, ZoneID, LotName) 
-ON UPDATE CASCADE
-NOT NULL
+	CitationID VARCHAR(10) NOT NULL,
+	Plate VARCHAR(20) NOT NULL,
+	Number INT NOT NULL,
+	ZoneID VARCHAR(10) NOT NULL, 
+	LotName VARCHAR(128) NOT NULL,
+	PayStatus ENUM('unpaid', 'paid', 'appealed', 'invalid') DEFAULT 'unpaid' NOT NULL,
+	Fee FLOAT NOT NULL,
+	CitationDate DATE NOT NULL,
+	CitationTime TIME NOT NULL,
+	PRIMARY KEY(CitationID),
+	FOREIGN KEY (Plate) 
+		REFERENCES Vehicles(Plate) 
+		ON UPDATE CASCADE,
+	FOREIGN KEY (Number, ZoneID, LotName) 
+		REFERENCES Spaces(Number, ZoneID, LotName) 
+		ON UPDATE CASCADE
 );
 
 CREATE TABLE ParkingActivity(
@@ -114,13 +106,11 @@ CREATE TABLE ParkingActivity(
 	LotName VARCHAR(128) NOT NULL,
 	Timestamp DATETIME NOT NULL,
 	LastAction ENUM('parking','exiting') NOT NULL,
-PRIMARY KEY (Plate, Timestamp),
-FOREIGN KEY (Plate) 
-REFERENCES Vehicles(Plate) 
-ON DELETE CASCADE ON UPDATE CASCADE
-NOT NULL,
-FOREIGN KEY (Number, ZoneID, LotName) 
-REFERENCES Spaces(Number, ZoneID, LotName)
-ON DELETE CASCADE ON UPDATE CASCADE
-NOT NULL
+	PRIMARY KEY (Plate, Timestamp),
+	FOREIGN KEY (Plate) 
+		REFERENCES Vehicles(Plate) 
+		ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (Number, ZoneID, LotName) 
+		REFERENCES Spaces(Number, ZoneID, LotName)
+		ON DELETE CASCADE ON UPDATE CASCADE
 );
