@@ -11,11 +11,10 @@ public class App{
         ConnHelper connHelper = new ConnHelper();
         Connection conn = null;
         try{
-            try{
-                Scanner scanner = new Scanner(System.in);
+            try (Scanner scanner = new Scanner(System.in)){
                 conn = connHelper.getConnection();
 
-                System.out.println("-----Welcome to WolfMedia-----\n\n");
+                System.out.println("Welcome to WolfParking Management System!\n\n");
 
                 while (true) {
                     System.out.println("Choose an operation you want to perform:");
@@ -32,8 +31,7 @@ public class App{
                         case 1:
                             InitDB initDB = new InitDB();
                             initDB.createSchema(conn);
-                            initDB.loadNoConstraintData(conn);
-                            initDB.loadConstraintData(conn);
+//                            initDB.loadDemoData(conn);
                             break;
 
                         case 2:
@@ -65,7 +63,6 @@ public class App{
                     if (choice == 8){
                         break;
                     }
-                    // scanner.close();
                 }
 
             }catch (SQLException e) {

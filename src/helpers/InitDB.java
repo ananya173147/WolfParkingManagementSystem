@@ -11,23 +11,16 @@ import java.sql.Statement;
 public class InitDB {
     
     public void createSchema(final Connection conn){
-        String schemaPath = "lib/create_schema.sql"; //Move to config
+        String schemaPath = "src/lib/create_schema.sql"; //Move to config
 
         executeSQLFile(schemaPath, conn);
         
     }
 
-    public void loadNoConstraintData(final Connection conn){
-        String noConstraintPath = "lib/no_constraint.sql"; //Move to config
+    public void loadDemoData(final Connection conn){
+        String noConstraintPath = "src/lib/demo_data.sql"; //Move to config
 
         executeSQLFile(noConstraintPath, conn);
-        
-    }
-
-    public void loadConstraintData(final Connection conn){
-        String constraintPath = "lib/constraint.sql"; //Move to config
-
-        executeSQLFile(constraintPath, conn);
         
     }
 
