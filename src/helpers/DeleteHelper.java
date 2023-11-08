@@ -28,7 +28,7 @@ public class DeleteHelper {
             statement.close();
             // connection.close();
         } catch (SQLException e) {
-            System.out.println("Exception at Insert");
+            System.out.println("Exception at Delete");
             e.printStackTrace();
         }
     }
