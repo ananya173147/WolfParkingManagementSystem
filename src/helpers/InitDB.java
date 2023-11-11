@@ -13,18 +13,15 @@ public class InitDB {
     public void createSchema(final Connection conn){
         String schemaPath = "src/lib/create_schema.sql";
         executeSQLFile(schemaPath, conn);
-        
     }
 
     public void loadDemoData(final Connection conn){
         String noConstraintPath = "src/lib/demo_data.sql";
         executeSQLFile(noConstraintPath, conn);
-        
     }
 
     public void executeSQLFile(String filePath, Connection conn){
         try{
-
             String sqlFileContent = new String(Files.readAllBytes(Paths.get(filePath)));
             String[] sqlStatements = sqlFileContent.split(";");
             
