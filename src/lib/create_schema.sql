@@ -11,7 +11,7 @@ DROP TABLE IF EXISTS Zones;
 SET FOREIGN_KEY_CHECKS = 1;
 
 CREATE TABLE Drivers (
-	ID VARCHAR(10) NOT NULL,
+	ID VARCHAR(10),
 	Name VARCHAR(128) NOT NULL,
 	Status ENUM('S', 'E', 'V') NOT NULL,
 	isDisabled BOOLEAN NOT NULL,
@@ -19,14 +19,14 @@ CREATE TABLE Drivers (
 );
 
 CREATE TABLE ParkingLots (
-	LotName VARCHAR(128) NOT NULL,
+	LotName VARCHAR(128),
 	Address VARCHAR(256) NOT NULL,
 	PRIMARY KEY(LotName)
 );
 
 CREATE TABLE Zones(
-	ZoneID VARCHAR(10) NOT NULL,
-	LotName VARCHAR(128) NOT NULL,
+	ZoneID VARCHAR(10),
+	LotName VARCHAR(128),
 	PRIMARY KEY(ZoneID, LotName),
 	FOREIGN KEY(LotName) 
 		REFERENCES ParkingLots(LotName) 
@@ -34,10 +34,10 @@ CREATE TABLE Zones(
 );
 
 CREATE TABLE Spaces(
-	Number INT NOT NULL,
+	Number INT,
 	SpaceType ENUM('electric', 'handicap', 'compact car', 'regular') NOT NULL DEFAULT 'regular',
-	ZoneID VARCHAR(10) NOT NULL, 
-	LotName VARCHAR (128) NOT NULL,
+	ZoneID VARCHAR(10), 
+	LotName VARCHAR (128),
 	PRIMARY KEY(Number, ZoneID, LotName),
 	FOREIGN KEY (ZoneID, LotName) 
 		REFERENCES Zones(ZoneID, LotName) 
@@ -45,7 +45,7 @@ CREATE TABLE Spaces(
 );
 
 CREATE TABLE Permits(
-	PermitID VARCHAR(10) NOT NULL,
+	PermitID VARCHAR(10),
 	ID VARCHAR(10) NOT NULL,
 	ZoneID VARCHAR(10) NOT NULL, 
 	LotName VARCHAR (128) NOT NULL,
@@ -64,13 +64,13 @@ CREATE TABLE Permits(
 );
 
 CREATE TABLE ModelInfo(
-	Model VARCHAR(128) NOT NULL,
-	Manufacturer VARCHAR(256) NOT NULL,
+	Model VARCHAR(128),
+	Manufacturer VARCHAR(256),
 	PRIMARY KEY (Model)
 );
 
 CREATE TABLE Vehicles(
-	Plate VARCHAR(20) NOT NULL,
+	Plate VARCHAR(20),
 	ID VARCHAR(10) NOT NULL,
 	PermitID VARCHAR(10) NOT NULL,
 	Year YEAR,
@@ -83,7 +83,7 @@ CREATE TABLE Vehicles(
 );
 
 CREATE TABLE Citations(
-	CitationID VARCHAR(10) NOT NULL,
+	CitationID VARCHAR(10),
 	Plate VARCHAR(20) NOT NULL,
 	Number INT NOT NULL,
 	ZoneID VARCHAR(10) NOT NULL, 
@@ -102,11 +102,11 @@ CREATE TABLE Citations(
 );
 
 CREATE TABLE ParkingActivity(
-	Plate VARCHAR(20) NOT NULL,
+	Plate VARCHAR(20),
+	Timestamp DATETIME,
 	Number INT NOT NULL,
 	ZoneID VARCHAR(10) NOT NULL,
 	LotName VARCHAR(128) NOT NULL,
-	Timestamp DATETIME NOT NULL,
 	LastAction ENUM('parking','exiting') NOT NULL,
 	PRIMARY KEY (Plate, Timestamp),
 	FOREIGN KEY (Plate) 

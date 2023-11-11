@@ -31,7 +31,7 @@ public class App{
                         case 1:
                             InitDB initDB = new InitDB();
                             initDB.createSchema(conn);
-//                            initDB.loadDemoData(conn);
+                            initDB.loadDemoData(conn);
                             break;
 
                         case 2:
