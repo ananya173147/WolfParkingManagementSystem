@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.lang.Exception;
 import java.util.Scanner;
 import java.util.HashMap;
+import java.util.InputMismatchException;
 import java.util.Map;
 
 public class InformationProcessing {
@@ -30,7 +31,7 @@ public class InformationProcessing {
             System.out.println("11. Update Spaces Info");
             System.out.println("12. Delete Spaces Info");
             System.out.println("13. Update Parking Activity");
-            System.out.println("13. Update Exit Parking Activity");
+            System.out.println("14. Update Exit Parking Activity");
             System.out.println("Enter your choice: \t");
             int choice = scanner.nextInt();
             scanner.nextLine();
@@ -83,25 +84,32 @@ public class InformationProcessing {
         }
     }
     
-    public void insertDriverInfo(Connection conn) throws SQLException {
-        //insert operation on inserting driver info to the DB
+    public void insertDriverInfo(Connection conn) throws SQLException, IllegalStateException {
+    	//insert operation on basic info for Driver
         Map<String, Object> columnValues = new HashMap<>();
         System.out.println("Driver ID: ");
         String dId = scanner.nextLine();
         columnValues.put("ID", dId);
         System.out.println("Enter Driver name:");
         String dname = scanner.nextLine();
-        scanner.nextLine();
         columnValues.put("Name", dname);
         System.out.println("Enter Status:");
         String status = scanner.nextLine();
         columnValues.put("Status", status);
-        System.out.println("isDisabled? ");
-        Boolean isDisabled = scanner.nextBoolean();
+        System.out.println("isDisabled? (Type true/false)");
+        boolean isDisabled = false;
+        try {
+            isDisabled = scanner.nextBoolean();
+        } catch (InputMismatchException e) {
+            scanner.nextLine();
+            System.out.println("Error: InputMismatchException occurred. Please enter valid input for 'isDisabled' field");
+            e.printStackTrace();
+        }
         columnValues.put("isDisabled", isDisabled);
         InsertHelper insertHelper = new InsertHelper();
-        insertHelper.insertQuery(columnValues, "Driver", conn);
+        insertHelper.insertQuery(columnValues, "Drivers", conn);
     }
+
     
     public void UpdateDriverInfo(Connection conn) {
         //update operation on basic info for driver
