@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SelectHelper {
-    public List<List<Object>> select(String tableName, List<String> columnNames, String condition, String groupBy, String having, Connection connection){
+    public List<List<Object>> select(String tableName, List<String> columnNames, String condition, String groupBy, String having, String orderBy, Connection connection){
         try{
             StringBuilder sqlBuilder = new StringBuilder("SELECT ");
             for (String columnName : columnNames) {
@@ -21,6 +21,9 @@ public class SelectHelper {
             }
             if (having != null && !having.isEmpty()) {
                 sqlBuilder.append(" HAVING ").append(having);
+            }
+            if (orderBy != null && !orderBy.isEmpty()) {
+                sqlBuilder.append(" ORDER BY ").append(orderBy);
             }
             String sql = sqlBuilder.toString();
             PreparedStatement statement = connection.prepareStatement(sql);

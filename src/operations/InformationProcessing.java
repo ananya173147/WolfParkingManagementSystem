@@ -32,7 +32,8 @@ public class InformationProcessing {
             System.out.println("12. Delete Spaces Info");
             System.out.println("13. Update Parking Activity");
             System.out.println("14. Update Exit Parking Activity");
-            System.out.println("Enter your choice: \t");
+            System.out.println("15. Exit Information Processing");
+            System.out.println("\nEnter your choice: \t");
             int choice = scanner.nextInt();
             scanner.nextLine();
         
@@ -79,8 +80,14 @@ public class InformationProcessing {
                 case 14:
                     ExitParking(conn);
                     break;
-
+                case 15:
+                	break;
+                default:
+	                System.out.println("Invalid Input, Please try again.");
             }      
+            if (choice == 15){
+	            break;
+	        }
         }
     }
     

@@ -23,8 +23,8 @@ public class App{
                     System.out.println("3. Maintaining Permits/Vehicles");
                     System.out.println("4. Maintaining Citations");
                     System.out.println("5. Report Generation");
-                    System.out.println("8. Exit App");
-                    System.out.println("Enter your choice: \t");
+                    System.out.println("6. Exit App");
+                    System.out.println("\nEnter your choice: \t");
                     int choice = scanner.nextInt();
 
                     switch (choice) {
@@ -54,13 +54,13 @@ public class App{
                             reportsGeneration.run(conn);
                             break;
 
-                        case 8:
+                        case 6:
                             break;
 
                         default:
                             System.out.println("Invalid Input, Please try again.");
                     }
-                    if (choice == 8){
+                    if (choice == 6){
                         break;
                     }
                 }
