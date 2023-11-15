@@ -128,8 +128,7 @@ public class InformationProcessing {
         System.out.println("3. Status");
         System.out.println("4. isDisabled");
         System.out.println("Enter your choice: \t");
-        int column = scanner.nextInt();
-        scanner.nextLine();
+        Integer column = Integer.parseInt(scanner.nextLine());
         System.out.println("Enter the Driver ID for the update operation:");
         String dId = scanner.nextLine();
         System.out.println("Enter the new value:");
@@ -187,8 +186,7 @@ public class InformationProcessing {
         System.out.println("2. Address");
 
         System.out.println("Enter your choice: \t");
-        int column = scanner.nextInt();
-        scanner.nextLine();
+        Integer column = Integer.parseInt(scanner.nextLine());
         System.out.println("Enter the LotName for the update operation:");
         String LotName = scanner.nextLine();
         System.out.println("Enter the new value:");
@@ -240,8 +238,7 @@ public class InformationProcessing {
         System.out.println("2. LotName");
 
         System.out.println("Enter your choice: \t");
-        int column = scanner.nextInt();
-        scanner.nextLine();
+        Integer column = Integer.parseInt(scanner.nextLine());
         System.out.println("Enter the ZoneID for the update operation:");
         String ZoneID = scanner.nextLine();
         System.out.println("Enter the new value:");
@@ -273,7 +270,7 @@ public class InformationProcessing {
         //insert operation on inserting driver info to the DB
         Map<String, Object> columnValues = new HashMap<>();
         System.out.println("Enter Space Number: ");
-        Integer snumber = scanner.nextInt();
+        Integer snumber = Integer.parseInt(scanner.nextLine());
         columnValues.put("Number", snumber);
         System.out.println("Enter Space Type:");
         String stype = scanner.nextLine();
@@ -302,7 +299,7 @@ public class InformationProcessing {
         int column = scanner.nextInt();
         scanner.nextLine();
         System.out.println("Enter the Space Number for the update operation:");
-        Integer snumber = scanner.nextInt();
+        Integer snumber = Integer.parseInt(scanner.nextLine());
         System.out.println("Enter the new value:");
 
         if (column == 1) {
@@ -342,7 +339,7 @@ public class InformationProcessing {
         String plate = scanner.nextLine();
         columnValues.put("Plate", plate);
         System.out.println("Enter Number: ");
-        Integer snumber = scanner.nextInt();
+        Integer snumber = Integer.parseInt(scanner.nextLine());
         columnValues.put("Number", snumber);
         System.out.println("Enter ZoneID:");
         String ZoneID = scanner.nextLine();
@@ -367,7 +364,7 @@ public class InformationProcessing {
         String plate = scanner.nextLine();
         columnValues.put("Plate", plate);
         System.out.println("Enter Number: ");
-        Integer snumber = scanner.nextInt();
+        Integer snumber = Integer.parseInt(scanner.nextLine());
         columnValues.put("Number", snumber);
         System.out.println("Enter ZoneID:");
         String ZoneID = scanner.nextLine();

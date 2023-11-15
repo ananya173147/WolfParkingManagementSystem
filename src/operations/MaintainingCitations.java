@@ -1,11 +1,14 @@
 package operations;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
 import helpers.InsertHelper;
+import helpers.SelectHelper;
 import helpers.UpdateHelper;
 
 public class MaintainingCitations {
@@ -20,7 +23,9 @@ public class MaintainingCitations {
             System.out.println("2. Enter Citation Info");
             System.out.println("3. Update Citation Info");
             System.out.println("4. Appeal Citation");
-            System.out.println("Enter your choice: \t");
+            System.out.println("5. Pay Citation");
+            System.out.println("6. Exit Maintaining Citations");
+            System.out.println("\nEnter your choice: \t");
             int choice = scanner.nextInt();
             scanner.nextLine();
             switch(choice) {
@@ -43,18 +48,113 @@ public class MaintainingCitations {
                 case 5:
                     PayCitation(conn);
                     break;
+                    
+                case 6:
+                	break;
+                	
                 default:
                     System.out.println("Invalid Input, Please try again.");
-
             }
+            if (choice == 6){
+	            break;
+	        }
         }
     }
 
-    public void CheckForViolation(Connection connection){
-        //Taking the required input
-        System.out.println("Enter the details for Citation -");
-        //Tp add code for this part    
+    public void tablePrint(List<String> columnNames, List<List<Object>> results) {
+        // Calculate maximum column widths
+        int[] columnWidths = new int[columnNames.size()];
+        
+        for (int i = 0; i < columnNames.size(); i++) {
+            columnWidths[i] = columnNames.get(i).length();
+            
+            for (List<Object> row : results) {
+                Object value = row.get(i);
+                int valueLength = (value != null) ? value.toString().length() : 4;
+                columnWidths[i] = Math.max(columnWidths[i], valueLength);
+            }
+        }
+        // Print column names
+        printRow(columnNames, columnWidths);
+        // Print separator line
+        printSeparator(columnWidths);
+        // Print rows
+        for (List<Object> row : results) {
+            printRow(row, columnWidths);
+        }
+    }
+
+    public void printRow(List<?> values, int[] columnWidths) {
+        System.out.print("| ");
+        
+        for (int i = 0; i < values.size(); i++) {
+            String formattedValue = String.format("%-" + columnWidths[i] + "s", values.get(i));
+            System.out.print(formattedValue + " | ");
+        }
+        
+        System.out.println();
+    }
+
+    public void printSeparator(int[] columnWidths) {
+        System.out.print("+");
+        
+        for (int width : columnWidths) {
+            System.out.print("-".repeat(width + 2) + "+");
+        }
+        
+        System.out.println();
+    }    
     
+    public void CheckForViolation(Connection connection){
+    	//Taking required input from the user
+    	System.out.println("Enter the Plate");
+        String plate = scanner.nextLine();
+    	
+        System.out.println("Enter the Timestamp");
+        String timestamp = scanner.nextLine();
+        
+        SelectHelper selectHelper = new SelectHelper();
+        List<String> columnNames = new ArrayList<>();
+        
+        columnNames.add("MAX(Violation)");
+        
+		// Check for violations in four cases:
+		        //1. wrong zone parking/invalid permit
+		        //2. no permit
+		        //3. expired permit	
+		        //4. space type non-compliance
+        // Return 1 if violation, else 0
+        
+        String tableName = "(SELECT PA.Plate, PA.Timestamp, "  
+                + "(CASE "
+                + "WHEN PA.ZoneID NOT IN ("
+                + "SELECT P.ZoneID FROM Permits P "
+                + "WHERE P.LotName = PA.LotName AND P.PermitID = V.PermitID"
+                + ") THEN 1 "
+                + "WHEN V.PermitID IS NULL THEN 1 "
+                + "WHEN DATE(PA.Timestamp) > P.ExpDate OR (DATE(PA.Timestamp) = P.ExpDate AND TIME(PA.Timestamp) > P.ExpTime) THEN 1 "
+                + "WHEN P.SpaceType != S.SpaceType THEN 1 ELSE 0 "
+                + "END) AS Violation "
+                + "FROM ParkingActivity PA "
+                + "LEFT JOIN Vehicles V ON PA.Plate = V.Plate "
+                + "LEFT JOIN Permits P ON V.PermitID = P.PermitID "
+                + "LEFT JOIN Spaces S ON PA.Number = S.Number "
+                + "AND PA.ZoneID = S.ZoneID "
+                + "AND PA.LotName = S.LotName) AS Subquery";
+        
+        String condition = "Subquery.Plate = '" + plate + "' AND Subquery.Timestamp = '" + timestamp + "'";
+
+        List<List<Object>> results = selectHelper.select(tableName, columnNames, condition, null, null, null, connection);
+        
+        List<String> columnNames1 = new ArrayList<>();
+        columnNames1.add("isViolation");
+        
+        //Printing the result
+        if (!results.isEmpty()) {
+        	tablePrint(columnNames1, results);
+        } else{
+            System.out.println("Empty result.");
+        }
     }
 
     public void EnterCitationInfo(Connection connection){
