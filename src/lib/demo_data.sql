@@ -133,9 +133,9 @@ VALUES
 ('VAN-9910', 0, 'No Permit', NULL, 'Papaya Metallic', 'Macan GTS'); 
 
 DELETE FROM Citations WHERE 1=1;
-INSERT INTO Citations (CitationID, Plate, Number, ZoneID, LotName, PayStatus, Fee, CitationDate, CitationTime)
+INSERT INTO Citations (CitationID, Plate, Number, ZoneID, LotName, PayStatus, Category, Fee, CitationDate, CitationTime)
 VALUES
-('NP1', 'VAN-9910', 1, 'A', 'Dan Allen Parking Deck', 'paid', 40, '2021-10-11', '08:00:00'),
-('EP1', 'CRICKET', 3, 'AS', 'Poulton Deck', 'unpaid', 30, '2023-10-01', '08:00:00');
+('NP1', 'VAN-9910', 1, 'A', 'Dan Allen Parking Deck', 'paid', 'No Permit', 40, '2021-10-11', '08:00:00'),
+('EP1', 'CRICKET', 3, 'AS', 'Poulton Deck', 'unpaid', 'Expired Permit', 30, '2023-10-01', '08:00:00');
 
 DELETE FROM ParkingActivity WHERE 1=1;

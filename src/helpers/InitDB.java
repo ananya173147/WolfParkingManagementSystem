@@ -40,7 +40,7 @@ public class InitDB {
             e.printStackTrace();
         } finally {
         	if(message.equals("schema")) {
-        		System.out.println("Schema executed successfully");
+        		System.out.println("Schema created successfully");
         	}
         	else {
         		System.out.println("Loaded demo data successfully\n");
