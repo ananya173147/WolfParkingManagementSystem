@@ -44,8 +44,6 @@ Make sure you have the following installed on your system:
 
 4. Create a SQL Database
 
-5. Open your web browser and go to [http://localhost:8080](http://localhost:8080) to access the Wolf Parking Management System.
-
 ### Usage
 
 The system has a main menu that gives the user the following options:
