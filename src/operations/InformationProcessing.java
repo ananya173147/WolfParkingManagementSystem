@@ -9,6 +9,7 @@ import java.util.Scanner;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Map;
+import java.sql.Statement;
 
 public class InformationProcessing {
 
@@ -92,6 +93,48 @@ public class InformationProcessing {
     }
     
     public void insertDriverInfo(Connection conn) throws SQLException, IllegalStateException {
+    	
+    	conn.setAutoCommit(false);
+    	
+    	try {
+    		Statement statement = conn.createStatement();;
+  
+    		System.out.println("Driver ID: ");
+    		String dId = scanner.nextLine();
+    		
+    		System.out.println("Enter Driver name:");
+    		String dname = scanner.nextLine();
+    		
+    		System.out.println("Enter Status:");
+    		String status = scanner.nextLine();
+    		
+    		System.out.println("isDisabled? (Type true/false)");
+    		boolean isDisabled = false;
+    		
+    		try {
+    			isDisabled = scanner.nextBoolean();
+    		} catch (InputMismatchException e) {
+    			scanner.nextLine();
+    			System.out.println("Error: InputMismatchException occurred. Please enter valid input for 'isDisabled' field");
+    			e.printStackTrace();
+    			conn.setAutoCommit(true);
+    			return;
+    		}
+    		
+    		String insertStatement = "INSERT INTO Drivers VALUES ('" + dId + "','" + dname + "','" + status + "'," + isDisabled + ");";
+    		statement.executeUpdate(insertStatement);
+    		conn.commit();
+    		
+    	} catch(Exception e){
+    		System.out.println("Exception occured: " + e.getMessage());
+    		conn.rollback();
+    	} finally {
+    		conn.setAutoCommit(true);
+    	}
+    }
+    	
+
+    /*public void insertDriverInfo(Connection conn) throws SQLException, IllegalStateException {
     	//insert operation on basic info for Driver
         Map<String, Object> columnValues = new HashMap<>();
         System.out.println("Driver ID: ");
@@ -116,8 +159,8 @@ public class InformationProcessing {
         InsertHelper insertHelper = new InsertHelper();
         insertHelper.insertQuery(columnValues, "Drivers", conn);
     }
+    */
 
-    
     public void UpdateDriverInfo(Connection conn) {
         //update operation on basic info for driver
         Map<String, Object> columnValues = new HashMap<>();
