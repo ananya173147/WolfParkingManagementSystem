@@ -147,10 +147,15 @@ public class InformationProcessing {
             String value1 = scanner.nextLine();
             columnValues.put("isDisabled", value1);
         }
+        else {
+        	System.out.println("Invalid option selected, Please try again! \n");
+        	return;
+        }
+        
 
-        String condition = "D_id=" + ("\"") + dId + ("\"");
+        String condition = "ID=" + ("\"") + dId + ("\"");
         UpdateHelper updateHelper = new UpdateHelper();
-        updateHelper.update("Driver", condition, columnValues, conn);
+        updateHelper.update("Drivers", condition, columnValues, conn);
     }
 
     public void DeleteDriverInfo(Connection conn){
@@ -160,7 +165,7 @@ public class InformationProcessing {
         String condition = "null";
         condition = "D_id=" + ("\"") + value + ("\""); 
         DeleteHelper deleteHelper = new DeleteHelper();
-        deleteHelper.delete("Driver", condition, conn);
+        deleteHelper.delete("Drivers", condition, conn);
     }
 
     public void insertLotInfo(Connection conn) throws SQLException {
@@ -241,6 +246,9 @@ public class InformationProcessing {
         Integer column = Integer.parseInt(scanner.nextLine());
         System.out.println("Enter the ZoneID for the update operation:");
         String ZoneID = scanner.nextLine();
+        
+        System.out.println("Enter the LotName for the update operation:");
+        String LotName = scanner.nextLine();
         System.out.println("Enter the new value:");
 
         if (column == 1) {
@@ -251,7 +259,7 @@ public class InformationProcessing {
             scanner.nextLine();
             columnValues.put("LotName", value1);
         } 
-        String condition = "ZoneID=" + ("\"") + ZoneID + ("\"");
+        String condition = "ZoneID=" + ("\"") + ZoneID + ("\"") + " AND " + "LotName=" + ("\"") + LotName + ("\"");
         UpdateHelper updateHelper = new UpdateHelper();
         updateHelper.update("Zones", condition, columnValues, conn);
     }
@@ -260,8 +268,10 @@ public class InformationProcessing {
         //delete operation on basic info for Driver
         System.out.println("Provide the ZoneID which you want to delete:");
     	String value = scanner.nextLine();
+    	System.out.println("Provide the LotName for the zone which you want to delete:");
+    	String Lotvalue = scanner.nextLine();
         String condition = "null";
-        condition = "LotName=" + ("\"") + value + ("\""); 
+        condition = "ZoneID=" + ("\"") + value + ("\"") + " AND " + "LotName=" + ("\"") + Lotvalue + ("\""); 
         DeleteHelper deleteHelper = new DeleteHelper();
         deleteHelper.delete("ParkingLots", condition, conn);
     }
@@ -300,7 +310,14 @@ public class InformationProcessing {
         scanner.nextLine();
         System.out.println("Enter the Space Number for the update operation:");
         Integer snumber = Integer.parseInt(scanner.nextLine());
+        
+        System.out.println("Enter the ZoneID for the update operation:");
+        String ZoneID = scanner.nextLine();
+        
+        System.out.println("Enter the LotName for the update operation:");
+        String LotName = scanner.nextLine();
         System.out.println("Enter the new value:");
+        
 
         if (column == 1) {
             Integer value1 = scanner.nextInt();
@@ -309,7 +326,7 @@ public class InformationProcessing {
             String value1 = scanner.nextLine();
             scanner.nextLine();
             columnValues.put("SpaceType", value1);
-        } else if (column == 3) {
+        } else if (column == 3) {   
             String value1 = scanner.nextLine();
             columnValues.put("ZoneID", value1);
         } else if (column == 4) {
@@ -317,7 +334,7 @@ public class InformationProcessing {
             columnValues.put("LotName", value1);
         }
 
-        String condition = "Number=" + ("\"") + snumber + ("\"");
+        String condition = "Number=" + ("\"") + snumber + ("\"") + " AND " + "ZoneID=" + ("\"") + ZoneID + ("\"") + " AND " + "LotName=" + ("\"") + LotName + ("\"");
         UpdateHelper updateHelper = new UpdateHelper();
         updateHelper.update("Spaces", condition, columnValues, conn);
     }
@@ -326,8 +343,12 @@ public class InformationProcessing {
         //delete operation on basic info for Driver
         System.out.println("Provide the Space Number which you want to delete:");
     	Integer value = Integer.parseInt(scanner.nextLine());
+    	System.out.println("Provide the ZoneID which you want to delete:");
+     	String ZoneID = scanner.nextLine();
+     	System.out.println("Provide the LotName for the zone which you want to delete:");
+     	String LotName = scanner.nextLine();
         String condition = "null";
-        condition = "Number=" + ("\"") + value + ("\""); 
+        condition = "Number=" + ("\"") + value + ("\"") + " AND " + "ZoneID=" + ("\"") + ZoneID + ("\"") + " AND " + "LotName=" + ("\"") + LotName + ("\""); 
         DeleteHelper deleteHelper = new DeleteHelper();
         deleteHelper.delete("Spaces", condition, conn);
     }
