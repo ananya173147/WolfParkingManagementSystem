@@ -85,6 +85,7 @@ public class InformationProcessing {
                 	break;
                 default:
 	                System.out.println("Invalid Input, Please try again.");
+	                break;
             }      
             if (choice == 15){
 	            break;
@@ -172,7 +173,7 @@ public class InformationProcessing {
         System.out.println("4. isDisabled");
         System.out.println("Enter your choice: \t");
         Integer column = Integer.parseInt(scanner.nextLine());
-        System.out.println("Enter the Driver ID for the update operation:");
+        System.out.println("Enter the Driver ID to confirm the update operation:");
         String dId = scanner.nextLine();
         System.out.println("Enter the new value:");
 
@@ -194,8 +195,6 @@ public class InformationProcessing {
         	System.out.println("Invalid option selected, Please try again! \n");
         	return;
         }
-        
-
         String condition = "ID=" + ("\"") + dId + ("\"");
         UpdateHelper updateHelper = new UpdateHelper();
         updateHelper.update("Drivers", condition, columnValues, conn);
@@ -214,10 +213,10 @@ public class InformationProcessing {
     public void insertLotInfo(Connection conn) throws SQLException {
         //insert operation on inserting driver info to the DB
         Map<String, Object> columnValues = new HashMap<>();
-        System.out.println("Enter Lot Name ");
+        System.out.println("Enter Parking Lot Name ");
         String lotname = scanner.nextLine();
         columnValues.put("LotName", lotname);
-        System.out.println("Enter Lot Address:");
+        System.out.println("Enter the Parking Lot Address:");
         String addr = scanner.nextLine();
         scanner.nextLine();
         columnValues.put("Address", addr);
@@ -229,9 +228,9 @@ public class InformationProcessing {
         //update operation on basic info for driver
         Map<String, Object> columnValues = new HashMap<>();
 
-        System.out.println("Choose the column to update:");
-        System.out.println("1. LotName");
-        System.out.println("2. Address");
+        System.out.println("Choose the column you wish to update:");
+        System.out.println("Press 1 for LotName");
+        System.out.println("Press 2 for Address");
 
         System.out.println("Enter your choice: \t");
         Integer column = Integer.parseInt(scanner.nextLine());
@@ -244,7 +243,6 @@ public class InformationProcessing {
             columnValues.put("LotName", value1);
         } else if (column == 2) {
             String value1 = scanner.nextLine();
-            scanner.nextLine();
             columnValues.put("Address", value1);
         } 
         else {
@@ -285,16 +283,16 @@ public class InformationProcessing {
         //update operation on basic info for driver
         Map<String, Object> columnValues = new HashMap<>();
 
-        System.out.println("Choose the column to update:");
-        System.out.println("1. ZoneID");
-        System.out.println("2. LotName");
+        System.out.println("Choose the column to wish update:");
+        System.out.println("Press 1 for ZoneID");
+        System.out.println("Press 2 for LotName");
 
         System.out.println("Enter your choice: \t");
         Integer column = Integer.parseInt(scanner.nextLine());
-        System.out.println("Enter the ZoneID for the update operation:");
+        System.out.println("Enter the ZoneID to confirm the update operation:");
         String ZoneID = scanner.nextLine();
         
-        System.out.println("Enter the LotName for the update operation:");
+        System.out.println("Enter the corresponding LotName to confirm the update operation:");
         String LotName = scanner.nextLine();
         System.out.println("Enter the new value:");
 
@@ -352,21 +350,21 @@ public class InformationProcessing {
         //update operation on basic info for driver
         Map<String, Object> columnValues = new HashMap<>();
 
-        System.out.println("Choose the column to update:");
-        System.out.println("1. Space Number");
-        System.out.println("2. Space Type");
-        System.out.println("3. ZoneID");
-        System.out.println("4. LotName");
+        System.out.println("Choose the column you wish to update:");
+        System.out.println("Press 1 for Space Number");
+        System.out.println("Press 2 for Space Type");
+        System.out.println("Press 3 for ZoneID");
+        System.out.println("Press 4 for LotName");
         System.out.println("Enter your choice: \t");
         int column = scanner.nextInt();
         scanner.nextLine();
-        System.out.println("Enter the Space Number for the update operation:");
+        System.out.println("Enter the Space Number to confirm the update operation:");
         Integer snumber = Integer.parseInt(scanner.nextLine());
         
-        System.out.println("Enter the ZoneID for the update operation:");
+        System.out.println("Enter the ZoneID to confirm the update operation:");
         String ZoneID = scanner.nextLine();
         
-        System.out.println("Enter the LotName for the update operation:");
+        System.out.println("Enter the LotName to confirm the update operation:");
         String LotName = scanner.nextLine();
         System.out.println("Enter the new value:");
         
@@ -415,19 +413,19 @@ public class InformationProcessing {
         System.out.println("Enter Plate:");
         String plate = scanner.nextLine();
         columnValues.put("Plate", plate);
-        System.out.println("Enter Number: ");
+        System.out.println("Enter Space Number: ");
         Integer snumber = Integer.parseInt(scanner.nextLine());
         columnValues.put("Number", snumber);
         System.out.println("Enter ZoneID:");
         String ZoneID = scanner.nextLine();
         columnValues.put("ZoneID", ZoneID);
-        System.out.println("Enter LotName");
+        System.out.println("Enter Parking Lot Name");
         String LotName = scanner.nextLine();
         columnValues.put("LotName", LotName);
-        System.out.println("Enter LastAction");
+        System.out.println("Enter LastAction: (parking)");
         String lastaction = scanner.nextLine();
         columnValues.put("LastAction", lastaction);
-        System.out.println("Enter TimeStamp");
+        System.out.println("Enter TimeStamp (Format: yyyy-mm-dd hrs:mins:secs)");
         String TimeStamp = scanner.nextLine();
         columnValues.put("TimeStamp", TimeStamp);
         InsertHelper insertHelper = new InsertHelper();
@@ -440,19 +438,19 @@ public class InformationProcessing {
         System.out.println("Enter Plate:");
         String plate = scanner.nextLine();
         columnValues.put("Plate", plate);
-        System.out.println("Enter Number: ");
+        System.out.println("Enter Space Number: ");
         Integer snumber = Integer.parseInt(scanner.nextLine());
         columnValues.put("Number", snumber);
         System.out.println("Enter ZoneID:");
         String ZoneID = scanner.nextLine();
         columnValues.put("ZoneID", ZoneID);
-        System.out.println("Enter LotName");
+        System.out.println("Enter Parking Lot Name");
         String LotName = scanner.nextLine();
         columnValues.put("LotName", LotName);
-        System.out.println("Enter LastAction");
+        System.out.println("Enter LastAction: (exiting)");
         String lastaction = scanner.nextLine();
         columnValues.put("LastAction", lastaction);
-        System.out.println("Enter TimeStamp");
+        System.out.println("Enter TimeStamp (Format: yyyy-mm-dd hrs:mins:secs)");
         String TimeStamp = scanner.nextLine();
         columnValues.put("TimeStamp", TimeStamp);
         InsertHelper insertHelper = new InsertHelper();
