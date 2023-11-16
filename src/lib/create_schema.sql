@@ -26,7 +26,7 @@ CREATE TABLE ParkingLots (
 
 CREATE TABLE Zones(
 	ZoneID ENUM ('A', 'B', 'C', 'D', 'AS', 'BS', 'CS', 'DS', 'V', 'F'),
-	LotName VARCHAR(128),
+	LotName VARCHAR(128) NOT NULL,
 	PRIMARY KEY(ZoneID, LotName),
 	FOREIGN KEY(LotName) 
 		REFERENCES ParkingLots(LotName) 
@@ -36,8 +36,8 @@ CREATE TABLE Zones(
 CREATE TABLE Spaces(
 	Number INT,
 	SpaceType ENUM('electric', 'handicap', 'compact car', 'regular') NOT NULL DEFAULT 'regular',
-	ZoneID ENUM ('A', 'B', 'C', 'D', 'AS', 'BS', 'CS', 'DS', 'V', 'F'), 
-	LotName VARCHAR (128),
+	ZoneID ENUM ('A', 'B', 'C', 'D', 'AS', 'BS', 'CS', 'DS', 'V', 'F') NOT NULL, 
+	LotName VARCHAR (128) NOT NULL,
 	PRIMARY KEY(Number, ZoneID, LotName),
 	FOREIGN KEY (ZoneID, LotName) 
 		REFERENCES Zones(ZoneID, LotName) 
@@ -47,7 +47,7 @@ CREATE TABLE Spaces(
 CREATE TABLE Permits(
 	PermitID VARCHAR(10),
 	ID VARCHAR(10) NOT NULL,
-	ZoneID ENUM ('A', 'B', 'C', 'D', 'AS', 'BS', 'CS', 'DS', 'V', 'F'), 
+	ZoneID ENUM ('A', 'B', 'C', 'D', 'AS', 'BS', 'CS', 'DS', 'V', 'F') NOT NULL, 
 	LotName VARCHAR (128) NOT NULL,
 	SpaceType ENUM('electric', 'handicap', 'compact car', 'regular') NOT NULL DEFAULT 'regular',
 	PermitType ENUM('residential', 'commuter', 'peak hours', 'special event','park & ride') NOT NULL,
@@ -79,6 +79,12 @@ CREATE TABLE Vehicles(
 	PRIMARY KEY (Plate),
 	FOREIGN KEY (Model) 
 		REFERENCES ModelInfo(Model) 
+		ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (ID)
+		REFERENCES Drivers(ID)
+		ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (PermitID)
+		REFERENCES Permits(PermitID)
 		ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -86,7 +92,7 @@ CREATE TABLE Citations(
 	CitationID VARCHAR(10),
 	Plate VARCHAR(20) NOT NULL,
 	Number INT NOT NULL,
-	ZoneID ENUM ('A', 'B', 'C', 'D', 'AS', 'BS', 'CS', 'DS', 'V', 'F'),
+	ZoneID ENUM ('A', 'B', 'C', 'D', 'AS', 'BS', 'CS', 'DS', 'V', 'F') NOT NULL,
 	LotName VARCHAR(128) NOT NULL,
 	PayStatus ENUM('unpaid', 'paid', 'appealed', 'invalid') DEFAULT 'unpaid' NOT NULL,
 	Category ENUM('Invalid Permit', 'Expired Permit', 'No Permit') DEFAULT 'Invalid Permit' NOT NULL,
@@ -104,9 +110,9 @@ CREATE TABLE Citations(
 
 CREATE TABLE ParkingActivity(
 	Plate VARCHAR(20),
-	Timestamp DATETIME,
+	Timestamp DATETIME NOT NULL,
 	Number INT NOT NULL,
-	ZoneID ENUM ('A', 'B', 'C', 'D', 'AS', 'BS', 'CS', 'DS', 'V', 'F'),
+	ZoneID ENUM ('A', 'B', 'C', 'D', 'AS', 'BS', 'CS', 'DS', 'V', 'F') NOT NULL,
 	LotName VARCHAR(128) NOT NULL,
 	LastAction ENUM('parking','exiting') NOT NULL,
 	PRIMARY KEY (Plate, Timestamp),
