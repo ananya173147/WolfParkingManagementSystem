@@ -14,78 +14,147 @@ import java.util.Map;
 
 public class MaintainingPermitVehicles {
 	
-    static Scanner scanner = new Scanner(System.in);
+    Scanner scanner = new Scanner(System.in);
+    public void run(final Connection conn) throws Exception {
+    	
+    	int choice = 0;
+
+        while (true) {
+            System.out.println("Choose an operation you want to perform:");
+            System.out.println("1. Insert Vehicle Info");
+            System.out.println("2. Update Vehicle Info");
+            System.out.println("3. Delete Vehicle Info");
+            System.out.println("4. Enter Permit Info");
+            System.out.println("5. Update Permit Info");
+            System.out.println("6. Delete Permit Info");
+            System.out.println("7. Exit Maintaining Permits/Vehicles");
+            System.out.println("\nEnter your choice: \t");
+            choice = scanner.nextInt();
+            scanner.nextLine();
+            
+            switch(choice) {
+            	case 1: addVehicle(conn);
+            			break;
+            			
+            	case 2: updateVehicle(conn);
+            			break;
+            			
+            	case 3: deleteVehicle(conn);
+            			break;
+            			
+            	case 4: addPermit(conn);
+            			break;
+            	
+            	case 5: updatePermit(conn);
+            			break;
+            	
+            	case 6: deletePermit(conn);
+            			break;
+            	
+            	case 7: break;
+            	
+            	default: System.out.println("Invalid input!\n");
+            }
+            if (choice == 7){
+	            break;
+	        }
+        } 
+    }
     
-    static void addVehicle(Connection conn) {
-    	
-    	SelectHelper selectHelper = new SelectHelper();
-    	Map<String, Object> columnValues1 = new HashMap<>();
-    	Map<String, Object> columnValues2 = new HashMap<>();
-    	
-    	System.out.println("Enter Plate Number: ");
-    	String plate = scanner.nextLine();
+    public void addVehicle(Connection conn) {
+        SelectHelper selectHelper = new SelectHelper();
+        InsertHelper insertHelper = new InsertHelper();
+
+        Map<String, Object> columnValues1 = new HashMap<>();
+        Map<String, Object> columnValues2 = new HashMap<>();
+
+        System.out.println("Enter Plate Number: ");
+        String plate = scanner.nextLine();
         columnValues1.put("Plate", plate);
-        
+
         System.out.println("Enter Driver ID:");
         String id = scanner.nextLine();
-        
-        //Find out the type of driver this ID belongs to
-        List<String> columnsForDriverStatus = List.of("Status");
-        List<List<Object>> objForDriverStatus = selectHelper.select("Drivers", columnsForDriverStatus, "ID = \'" + id + "\'",null , null,null, conn);
-        String statusOfDriver = objForDriverStatus.get(0).get(0).toString();
-        System.out.println(statusOfDriver);
-        
-//        if(statusOfDriver.length() != 0)
-//        	return;
-        columnValues1.put("ID", id);
 
+        // Find out the type of driver this ID belongs to
+        try {
+        List<String> columnsForDriverStatus = List.of("Status");
+        List<List<Object>> objForDriverStatus = selectHelper.select("Drivers", columnsForDriverStatus, "ID = \'" + id + '\'', null, null, null, conn);
         
+        // If the result is empty, the driver was not found
+        if (objForDriverStatus.isEmpty()) {
+            System.out.println("Error: Driver not found in the table. Please add the driver first.");
+            return;
+        }
+
+        String statusOfDriver = objForDriverStatus.get(0).get(0).toString();
+        System.out.println("The driver's status is " + statusOfDriver);
+
         System.out.println("Enter Permit ID:");
         String permitId = scanner.nextLine();
         
-//        List<String> columnsForDriverPermits = List.of("PermitI");
-//        
-//        List<List<Object>> objForDriverPermits = selectHelper.select("Drivers", columnsForDriverStatus, "ID = \'" + id + "\'",null , null, conn);
-//        String statusOfDriver = objForDriverStatus.get(0).get(0).toString();
-//        System.out.println(statusOfDriver);
+        List<String> columnsForExistingPermits = List.of("PermitID");
+        List<List<Object>> objForExistingPermits = selectHelper.select("Permits", columnsForExistingPermits, "ID = \'" + id + '\'' + "AND PermitID = \'" + permitId + '\'', null, null, null, conn);
         
+        // If the result is empty, the permit was not found
+        if (objForExistingPermits.isEmpty()) {
+            System.out.println("Error: Permit does not exist. Please add the permit first.");
+            return;
+        }
+        
+        // Check if the driver already has the maximum allowed number of vehicles on the permit
+        List<String> columnsForPermitVehicles = List.of("Plate");
+        List<List<Object>> objForPermitVehicles = selectHelper.select("Vehicles", columnsForPermitVehicles, "PermitID = \'" + permitId + '\'' + " AND ID = \'" + id + '\'', null, null, null, conn);
+        
+        // Maximum allowed vehicles based on driver status
+        int maxVehiclesAllowed = "E".equalsIgnoreCase(statusOfDriver) ? 2 : 1;
+
+        // If the driver has reached the maximum allowed vehicles, inform the user
+        if (objForPermitVehicles.size() >= maxVehiclesAllowed) {
+            System.out.println("Error: The driver already has the maximum allowed vehicles on the permit.");
+            return;
+        }
+        
+        columnValues1.put("ID", id);
         columnValues1.put("PermitID", permitId);
-        
+
         System.out.println("Enter Year:");
         int year = scanner.nextInt();
         columnValues1.put("Year", year);
         scanner.nextLine();
-        
+
         System.out.println("Enter Vehicle Color:");
         String color = scanner.nextLine();
         columnValues1.put("Color", color);
-        
+
         System.out.println("Enter Model:");
         String model = scanner.nextLine();
-        columnValues1.put("Model", model);
-        
-        //Check if the model already exists in the ModelInfo Table
-        List<String> columnsForModel = List.of("Model");
-        List<List<Object>> objForModel = selectHelper.select("ModelInfo", columnsForModel, "Model = \'" + model + "\'",null , null, null, conn);
-        
-        InsertHelper insertHelper = new InsertHelper();
-        
-        //If the Model is not present in the ModelInfo table, then only add it
-        if(objForModel.isEmpty()) {
 
-        	columnValues2.put("Model", model);
-        	
-        	System.out.println("Enter Manufacturer:");
-        	String manf = scanner.nextLine();
-        	columnValues2.put("Manufacturer", manf);
-        	
-        	insertHelper.insertQuery(columnValues2, "ModelInfo", conn);
+        // Check if the model is non-null
+        if (model != null && !model.isEmpty()) {
+            // Check if the model already exists in the ModelInfo Table
+            List<String> columnsForModel = List.of("Model");
+            List<List<Object>> objForModel = selectHelper.select("ModelInfo", columnsForModel, "Model = \'" + model + '\'', null, null, null, conn);
+
+            // If the Model is not present in the ModelInfo table, then only add it
+            if (objForModel.isEmpty()) {
+                columnValues2.put("Model", model);
+                System.out.println("Enter Manufacturer:");
+                String manf = scanner.nextLine();
+                columnValues2.put("Manufacturer", manf);
+                insertHelper.insertQuery(columnValues2, "ModelInfo", conn);
+            }
         }
         
         insertHelper.insertQuery(columnValues1, "Vehicles", conn);
+        
+        } catch (Exception e) {
+            System.out.println("Error: An unexpected error occurred.");
+            e.printStackTrace();
+        }
     }
+
        
-    static void updateVehicle(Connection conn) {
+    public void updateVehicle(Connection conn) {
     	
     	Map<String, Object> columnValues = new HashMap<>();
     	
@@ -188,13 +257,10 @@ public class MaintainingPermitVehicles {
             UpdateHelper updateHelper = new UpdateHelper();
             updateHelper.update("ModelInfo", condition, columnValues, conn);
         	
-        }
-       
-        
-    	
+        }    	
     }
     
-    static void deleteVehicle(Connection conn) {
+    public void deleteVehicle(Connection conn) {
     	
     	System.out.println("Enter the plate of the vehicle you want to delete: ");
     	String plate = scanner.nextLine();
@@ -205,9 +271,9 @@ public class MaintainingPermitVehicles {
     	
     }
     
-    static void addPermit(Connection conn) throws ParseException {
+    public void addPermit(Connection conn) throws ParseException {
     	
-//    	SelectHelper selectHelper = new SelectHelper();
+    	SelectHelper selectHelper = new SelectHelper();
     	Map<String, Object> columnValues = new HashMap<>();
     	
     	System.out.println("Enter Permit ID:");
@@ -216,50 +282,90 @@ public class MaintainingPermitVehicles {
         
         System.out.println("Enter Driver ID:");
         String id = scanner.nextLine();
-//        
+        
+        try {
+            List<String> columnsForDriverStatus = List.of("Status");
+            List<List<Object>> objForDriverStatus = selectHelper.select("Drivers", columnsForDriverStatus, "ID = \'" + id + '\'', null, null, null, conn);
+            
+            // If the result is empty, the driver was not found
+            if (objForDriverStatus.isEmpty()) {
+                System.out.println("Error: Driver not found in the table. Please add the driver first.");
+                return;
+            }
+
+            String statusOfDriver = objForDriverStatus.get(0).get(0).toString();
+            System.out.println("The driver's status is " + statusOfDriver);
+            
+            // Check if the driver already has a permit based on the status
+            List<String> columnsForExistingPermits = List.of("PermitID");
+            List<List<Object>> objForExistingPermits = selectHelper.select("Permits", columnsForExistingPermits, "ID = \'" + id + '\'', null, null, null, conn);
+            
+            System.out.println("Enter Permit Type ('residential', 'commuter', 'peak hours', 'special event', 'park & ride'):");
+	        String permitType = scanner.nextLine();
+	        
+	        // Limit the number of permits based on the driver's status and permit type
+            int maxPermitsAllowed = 1; // Default to 1 permit
+            
+            if ("special event".equals(permitType) || "park & ride".equals(permitType)) {
+	        	if ("E".equalsIgnoreCase(statusOfDriver)) {
+	                maxPermitsAllowed = 3;
+	            } else if ("S".equalsIgnoreCase(statusOfDriver)){
+	                maxPermitsAllowed = 2;
+	            }
+	        }
+	        else {
+	            if ("E".equalsIgnoreCase(statusOfDriver)) {
+	                maxPermitsAllowed = 2;
+	            }
+	        }
+            // If the driver has reached the maximum allowed permits, inform the user
+            if (objForExistingPermits.size() >= maxPermitsAllowed) {
+                System.out.println("Error: The driver already has the maximum allowed permits for the given status.");
+                return;
+            }
+            
 //        List<String> columnsForDriverStatus = List.of("Permit");
 //        List<List<Object>> objForDriverStatus = selectHelper.select("Drivers", columnsForDriverStatus, "ID = \'" + id + "\'",null , null, conn);
-//        String statusOfDriver = objForDriverStatus.get(0).get(0).toString();
-//        System.out.println(statusOfDriver);
-        
-        columnValues.put("ID", id);
-        
-        System.out.println("Enter Zone ID:");
-        String zone = scanner.nextLine();
-        columnValues.put("ZoneID", zone);
-        scanner.nextLine();
-        
-        System.out.println("Enter Lot Name:");
-        String lot = scanner.nextLine();
-        columnValues.put("LotName", lot);
-        
-        System.out.println("Enter Space Type:");
-        String space = scanner.nextLine();
-        columnValues.put("SpaceType", space);
-    	
-        System.out.println("Enter Permit Type:");
-        String permitType = scanner.nextLine();
-        columnValues.put("PermitType", permitType);
-        
-        System.out.print("Enter the Start Date (YYYY-MM-DD): ");
-        String startDate = scanner.nextLine();
-        Date stDate = Date.valueOf(startDate);
-        columnValues.put("StartDate", stDate);
-        
-        System.out.print("Enter the Expiration Date (YYYY-MM-DD): ");
-        String expirationDate = scanner.nextLine();
-        Date expDate = Date.valueOf(expirationDate);
-        columnValues.put("ExpDate", expDate);
-        
-        System.out.print("Enter the Expiration Time (HH:mm:ss): ");
-        String userInput = scanner.nextLine();
-        columnValues.put("ExpTime", java.sql.Time.valueOf(userInput));			
-        
-        InsertHelper insertHelper = new InsertHelper();
-        insertHelper.insertQuery(columnValues, "Permits", conn);
+
+	        columnValues.put("ID", id);
+	        columnValues.put("PermitType", permitType);
+	        
+	        System.out.println("Enter Zone ID:");
+	        String zone = scanner.nextLine();
+	        columnValues.put("ZoneID", zone);
+	        
+	        System.out.println("Enter Lot Name:");
+	        String lot = scanner.nextLine();
+	        columnValues.put("LotName", lot);
+	        
+	        System.out.println("Enter Space Type:");
+	        String space = scanner.nextLine();
+	        columnValues.put("SpaceType", space);
+	        
+	        System.out.print("Enter the Start Date (YYYY-MM-DD): ");
+	        String startDate = scanner.nextLine();
+	        Date stDate = Date.valueOf(startDate);
+	        columnValues.put("StartDate", stDate);
+	        
+	        System.out.print("Enter the Expiration Date (YYYY-MM-DD): ");
+	        String expirationDate = scanner.nextLine();
+	        Date expDate = Date.valueOf(expirationDate);
+	        columnValues.put("ExpDate", expDate);
+	        
+	        System.out.print("Enter the Expiration Time (HH:mm:ss): ");
+	        String userInput = scanner.nextLine();
+	        columnValues.put("ExpTime", java.sql.Time.valueOf(userInput));			
+	        
+	        InsertHelper insertHelper = new InsertHelper();
+	        insertHelper.insertQuery(columnValues, "Permits", conn);
+	        
+        } catch (Exception e) {
+            System.out.println("Error: An unexpected error occurred.");
+            e.printStackTrace();
+        }
     }
     
-    static void updatePermit(Connection conn) throws ParseException {
+    public void updatePermit(Connection conn) throws ParseException {
     	
     	Map<String, Object> columnValues = new HashMap<>();
     	
@@ -343,7 +449,7 @@ public class MaintainingPermitVehicles {
     	
     }
     
-    static void deletePermit(Connection conn) {
+    public void deletePermit(Connection conn) {
     	
     	System.out.println("Enter the Permit ID you want to delete: ");
     	String permit = scanner.nextLine();
@@ -352,54 +458,5 @@ public class MaintainingPermitVehicles {
     	DeleteHelper deleteHelper = new DeleteHelper();
         deleteHelper.delete("Permits", condition, conn);
     	
-    }
-
-    public void run(final Connection conn) throws Exception {
-    	
-    	int choice = 0;
-
-        while (choice != 9) {
-            System.out.println("\nChoose an operation you want to perform:");
-            
-            System.out.println("Enter 1 to Add Vehicle");
-            System.out.println("Enter 2 to Update Vehicle");
-            System.out.println("Enter 3 to Delete Vehicle");
-            
-            System.out.println("Enter 4 to Add Permit");
-            System.out.println("Enter 5 to Update Permit");
-            System.out.println("Enter 6 to Delete Permit");
-            
-            
-            System.out.println("Enter 9 to exit");
-            
-            System.out.println("Enter your choice: \t");
-            choice = scanner.nextInt();
-            scanner.nextLine();
-            
-            switch(choice) {
-            	case 1: addVehicle(conn);
-            			break;
-            			
-            	case 2: updateVehicle(conn);
-            			break;
-            			
-            	case 3: deleteVehicle(conn);
-            			break;
-            			
-            	case 4: addPermit(conn);
-            			break;
-            	
-            	case 5: updatePermit(conn);
-            			break;
-            	
-            	case 6: deletePermit(conn);
-            			break;
-            	
-            	case 9: break;
-            	
-            	default: System.out.println("Invalid input!\n");
-            }
-        }
-        
     }
 }
