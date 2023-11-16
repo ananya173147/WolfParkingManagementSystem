@@ -137,7 +137,7 @@ public class InformationProcessing {
             String value1 = scanner.nextLine();
             columnValues.put("ID", value1);
         } else if (column == 2) {
-            float value1 = scanner.nextFloat();
+            String value1 = scanner.nextLine();
             scanner.nextLine();
             columnValues.put("Name", value1);
         } else if (column == 3) {
@@ -163,7 +163,7 @@ public class InformationProcessing {
         System.out.println("Provide the Driver ID which you want to delete:");
     	String value = scanner.nextLine();
         String condition = "null";
-        condition = "D_id=" + ("\"") + value + ("\""); 
+        condition = "ID=" + ("\"") + value + ("\""); 
         DeleteHelper deleteHelper = new DeleteHelper();
         deleteHelper.delete("Drivers", condition, conn);
     }
