@@ -142,10 +142,10 @@ public class ReportsGeneration {
     	System.out.println("Enter the Lot Name");
         String lot_name = scanner.nextLine();
     	
-        System.out.println("Enter the Start Date.");
+        System.out.println("Enter the Start Date (Format: yyyy-mm-dd)");
         String start_date = scanner.nextLine();
 
-        System.out.println("Enter the End Date.");
+        System.out.println("Enter the End Date (Format: yyyy-mm-dd)");
         String end_date = scanner.nextLine();
         
       //Fetching the results from the table using select query
