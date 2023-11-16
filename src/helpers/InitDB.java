@@ -12,15 +12,15 @@ public class InitDB {
     
     public void createSchema(final Connection conn){
         String schemaPath = "src/lib/create_schema.sql";
-        executeSQLFile(schemaPath, conn);
+        executeSQLFile(schemaPath, "schema", conn);
     }
 
     public void loadDemoData(final Connection conn){
         String noConstraintPath = "src/lib/demo_data.sql";
-        executeSQLFile(noConstraintPath, conn);
+        executeSQLFile(noConstraintPath, "data", conn);
     }
 
-    public void executeSQLFile(String filePath, Connection conn){
+    public void executeSQLFile(String filePath, String message, Connection conn){
         try{
             String sqlFileContent = new String(Files.readAllBytes(Paths.get(filePath)));
             String[] sqlStatements = sqlFileContent.split(";");
@@ -39,7 +39,12 @@ public class InitDB {
             System.err.println("Error reading the SQL file");
             e.printStackTrace();
         } finally {
-            System.out.println("SQL File executed Successfully");
+        	if(message.equals("schema")) {
+        		System.out.println("Schema executed successfully");
+        	}
+        	else {
+        		System.out.println("Loaded demo data successfully\n");
+        	}
         }
     }
 }

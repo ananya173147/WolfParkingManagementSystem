@@ -25,7 +25,7 @@ CREATE TABLE ParkingLots (
 );
 
 CREATE TABLE Zones(
-	ZoneID ENUM ('A', 'B', 'C', 'D', 'AS', 'BS', 'CS', 'DS', 'V'),
+	ZoneID ENUM ('A', 'B', 'C', 'D', 'AS', 'BS', 'CS', 'DS', 'V', 'F'),
 	LotName VARCHAR(128),
 	PRIMARY KEY(ZoneID, LotName),
 	FOREIGN KEY(LotName) 
@@ -36,7 +36,7 @@ CREATE TABLE Zones(
 CREATE TABLE Spaces(
 	Number INT,
 	SpaceType ENUM('electric', 'handicap', 'compact car', 'regular') NOT NULL DEFAULT 'regular',
-	ZoneID ENUM ('A', 'B', 'C', 'D', 'AS', 'BS', 'CS', 'DS', 'V'), 
+	ZoneID ENUM ('A', 'B', 'C', 'D', 'AS', 'BS', 'CS', 'DS', 'V', 'F'), 
 	LotName VARCHAR (128),
 	PRIMARY KEY(Number, ZoneID, LotName),
 	FOREIGN KEY (ZoneID, LotName) 
@@ -47,7 +47,7 @@ CREATE TABLE Spaces(
 CREATE TABLE Permits(
 	PermitID VARCHAR(10),
 	ID VARCHAR(10) NOT NULL,
-	ZoneID ENUM ('A', 'B', 'C', 'D', 'AS', 'BS', 'CS', 'DS', 'V'), 
+	ZoneID ENUM ('A', 'B', 'C', 'D', 'AS', 'BS', 'CS', 'DS', 'V', 'F'), 
 	LotName VARCHAR (128) NOT NULL,
 	SpaceType ENUM('electric', 'handicap', 'compact car', 'regular') NOT NULL DEFAULT 'regular',
 	PermitType ENUM('residential', 'commuter', 'peak hours', 'special event','park & ride') NOT NULL,
@@ -86,7 +86,7 @@ CREATE TABLE Citations(
 	CitationID VARCHAR(10),
 	Plate VARCHAR(20) NOT NULL,
 	Number INT NOT NULL,
-	ZoneID ENUM ('A', 'B', 'C', 'D', 'AS', 'BS', 'CS', 'DS', 'V'),
+	ZoneID ENUM ('A', 'B', 'C', 'D', 'AS', 'BS', 'CS', 'DS', 'V', 'F'),
 	LotName VARCHAR(128) NOT NULL,
 	PayStatus ENUM('unpaid', 'paid', 'appealed', 'invalid') DEFAULT 'unpaid' NOT NULL,
 	Fee FLOAT NOT NULL,
@@ -105,7 +105,7 @@ CREATE TABLE ParkingActivity(
 	Plate VARCHAR(20),
 	Timestamp DATETIME,
 	Number INT NOT NULL,
-	ZoneID ENUM ('A', 'B', 'C', 'D', 'AS', 'BS', 'CS', 'DS', 'V'),
+	ZoneID ENUM ('A', 'B', 'C', 'D', 'AS', 'BS', 'CS', 'DS', 'V', 'F'),
 	LotName VARCHAR(128) NOT NULL,
 	LastAction ENUM('parking','exiting') NOT NULL,
 	PRIMARY KEY (Plate, Timestamp),
