@@ -13,7 +13,7 @@ Make sure you have the following installed on your system:
 - [Java Development Kit (JDK)](https://www.oracle.com/java/technologies/javase-downloads.html) (version 8 or higher)
 - [MariaDB](https://mariadb.com/downloads/) 
 - [PuTTY](https://putty.org/)
-- 
+  
 ### Build and Run
 
 1. Clone the repository:
