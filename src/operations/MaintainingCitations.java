@@ -161,13 +161,13 @@ public class MaintainingCitations {
         //insert operation on citation table
         Map<String, Object> columnValues = new HashMap<>();
         System.out.println("Citation ID: ");
-        Integer cId = scanner.nextInt();
+        String cId = scanner.nextLine();
         columnValues.put("CitationID", cId);
         System.out.println("Enter Car Plate Number:");
         String plate = scanner.nextLine();
         columnValues.put("Plate", plate);
         System.out.println("Enter Space Number:");
-        Integer s_no = scanner.nextInt();
+        Integer s_no = Integer.parseInt(scanner.nextLine());
         columnValues.put("Number", s_no );
         System.out.println("Enter Zone ID:");
         String zID = scanner.nextLine();
@@ -180,8 +180,21 @@ public class MaintainingCitations {
         String pStatus = scanner.nextLine();
         columnValues.put("PayStatus", pStatus);
         System.out.println("Enter Fee:");
-        String fee = scanner.nextLine();
-        columnValues.put("Fee", fee);
+        Float fee = Float.parseFloat(scanner.nextLine());
+        List<String> columnsForDriverDisability = List.of("isDisabled");
+        SelectHelper selectHelper = new SelectHelper();
+        String tableName = "Vehicles JOIN Drivers ON Vehicles.ID = Drivers.ID";
+		List<List<Object>> objForDriverDisability = selectHelper.select(tableName, columnsForDriverDisability, "Plate = \'" + plate + '\'', null, null, null, connection);
+        
+		String statusOfDriver = objForDriverDisability.get(0).get(0).toString();
+		System.out.println(statusOfDriver);
+		if (statusOfDriver.equals("true")) {
+			System.out.println("The driver is disabled, discounting by 50%, " + (fee/2));
+			columnValues.put("Fee", fee/2);
+		}
+		else {
+			columnValues.put("Fee", fee);
+		}
         System.out.println("Enter CitationDate:");
         String citationDate = scanner.nextLine();
         columnValues.put("CitationDate", citationDate);

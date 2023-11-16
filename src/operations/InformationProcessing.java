@@ -325,7 +325,7 @@ public class InformationProcessing {
     public void DeleteSpaceInfo(Connection conn){
         //delete operation on basic info for Driver
         System.out.println("Provide the Space Number which you want to delete:");
-    	Integer value = scanner.nextInt();
+    	Integer value = Integer.parseInt(scanner.nextLine());
         String condition = "null";
         condition = "Number=" + ("\"") + value + ("\""); 
         DeleteHelper deleteHelper = new DeleteHelper();
