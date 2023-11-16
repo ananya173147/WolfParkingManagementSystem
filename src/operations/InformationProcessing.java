@@ -204,6 +204,10 @@ public class InformationProcessing {
             scanner.nextLine();
             columnValues.put("Address", value1);
         } 
+        else {
+        	System.out.println("Invalid option selected, Please try again! \n");
+        	return;
+        }
         String condition = "LotName=" + ("\"") + LotName + ("\"");
         UpdateHelper updateHelper = new UpdateHelper();
         updateHelper.update("ParkingLots", condition, columnValues, conn);
@@ -258,7 +262,12 @@ public class InformationProcessing {
             String value1 = scanner.nextLine();
             scanner.nextLine();
             columnValues.put("LotName", value1);
-        } 
+        }
+        else {
+        	System.out.println("Invalid option selected, Please try again! \n");
+        	return;
+        }
+        
         String condition = "ZoneID=" + ("\"") + ZoneID + ("\"") + " AND " + "LotName=" + ("\"") + LotName + ("\"");
         UpdateHelper updateHelper = new UpdateHelper();
         updateHelper.update("Zones", condition, columnValues, conn);
@@ -332,6 +341,10 @@ public class InformationProcessing {
         } else if (column == 4) {
             String value1 = scanner.nextLine();
             columnValues.put("LotName", value1);
+        }
+        else {
+        	System.out.println("Invalid option selected, Please try again! \n");
+        	return;
         }
 
         String condition = "Number=" + ("\"") + snumber + ("\"") + " AND " + "ZoneID=" + ("\"") + ZoneID + ("\"") + " AND " + "LotName=" + ("\"") + LotName + ("\"");
