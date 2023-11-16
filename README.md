@@ -26,7 +26,8 @@ Make sure you have the following installed on your system:
     ```bash
     cd WolfParkingManagementSystem
     ```
-3. Install dependencies
+3. Install dependencies:
+   
   Dependencies mentioned in the Prerequisites should be installed.
 
 ### Database Configuration
