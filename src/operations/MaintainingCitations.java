@@ -105,57 +105,71 @@ public class MaintainingCitations {
         System.out.println();
     }    
     
-    public void CheckForViolation(Connection connection){
-    	//Taking required input from the user
-    	System.out.println("Enter the Plate");
+    public void CheckForViolation(Connection connection) {
+        // Taking required input from the user
+        System.out.println("Enter the Plate");
         String plate = scanner.nextLine();
-    	
+
         System.out.println("Enter the Timestamp");
         String timestamp = scanner.nextLine();
-        
+
         SelectHelper selectHelper = new SelectHelper();
         List<String> columnNames = new ArrayList<>();
-        
-        columnNames.add("MAX(Violation)");
-        
-		// Check for violations in four cases:
-		        //1. wrong zone parking/invalid permit
-		        //2. no permit
-		        //3. expired permit	
-		        //4. space type non-compliance
+
+        // Add columns for violation and violation type
+        columnNames.add("MAX(Violation) AS isViolation");
+        columnNames.add("MAX(ViolationType) AS ViolationType");
+
+        // Check for violations in four cases:
+        // 1. wrong zone parking/invalid permit
+        // 2. no permit
+        // 3. expired permit
+        // 4. space type non-compliance
         // Return 1 if violation, else 0
-        
-        String tableName = "(SELECT PA.Plate, PA.Timestamp, "  
+        String tableName = "(SELECT PA.Plate, PA.Timestamp, "
                 + "(CASE "
+                + "WHEN V.PermitID IS NULL THEN 1 "
+                + "WHEN DATE(PA.Timestamp) > P.ExpDate OR (DATE(PA.Timestamp) = P.ExpDate AND TIME(PA.Timestamp) > P.ExpTime) THEN 1 "
                 + "WHEN PA.ZoneID NOT IN ("
                 + "SELECT P.ZoneID FROM Permits P "
                 + "WHERE P.LotName = PA.LotName AND P.PermitID = V.PermitID"
                 + ") THEN 1 "
-                + "WHEN V.PermitID IS NULL THEN 1 "
-                + "WHEN DATE(PA.Timestamp) > P.ExpDate OR (DATE(PA.Timestamp) = P.ExpDate AND TIME(PA.Timestamp) > P.ExpTime) THEN 1 "
                 + "WHEN P.SpaceType != S.SpaceType THEN 1 ELSE 0 "
-                + "END) AS Violation "
+                + "END) AS Violation, "
+                + "(CASE "
+                + "WHEN V.PermitID IS NULL THEN 'No Permit' "
+                + "WHEN DATE(PA.Timestamp) > P.ExpDate OR (DATE(PA.Timestamp) = P.ExpDate AND TIME(PA.Timestamp) > P.ExpTime) THEN 'Expired Permit' "
+                + "WHEN PA.ZoneID NOT IN ("
+                + "SELECT P.ZoneID FROM Permits P "
+                + "WHERE P.LotName = PA.LotName AND P.PermitID = V.PermitID"
+                + ") THEN 'Wrong Zone Parking/Invalid Permit' "
+                + "WHEN P.SpaceType != S.SpaceType THEN 'Space Type Non-Compliance' ELSE 'No Violation' "
+                + "END) AS ViolationType "
                 + "FROM ParkingActivity PA "
                 + "LEFT JOIN Vehicles V ON PA.Plate = V.Plate "
                 + "LEFT JOIN Permits P ON V.PermitID = P.PermitID "
                 + "LEFT JOIN Spaces S ON PA.Number = S.Number "
                 + "AND PA.ZoneID = S.ZoneID "
                 + "AND PA.LotName = S.LotName) AS Subquery";
-        
+
         String condition = "Subquery.Plate = '" + plate + "' AND Subquery.Timestamp = '" + timestamp + "'";
 
         List<List<Object>> results = selectHelper.select(tableName, columnNames, condition, null, null, null, connection);
-        
+
         List<String> columnNames1 = new ArrayList<>();
+
+        // Add columns for violation and violation type
         columnNames1.add("isViolation");
-        
-        //Printing the result
+        columnNames1.add("ViolationType");
+
+        // Printing the result
         if (!results.isEmpty()) {
-        	tablePrint(columnNames1, results);
-        } else{
+            tablePrint(columnNames1, results);
+        } else {
             System.out.println("Empty result.");
         }
     }
+
 
     public void EnterCitationInfo(Connection connection){
         //insert operation on citation table

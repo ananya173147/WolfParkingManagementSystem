@@ -330,10 +330,7 @@ public class MaintainingPermitVehicles {
 	            System.out.println("Error: The driver already has the maximum allowed permits for the given status.");
 	            return;
 	        }
-            
-//        List<String> columnsForDriverStatus = List.of("Permit");
-//        List<List<Object>> objForDriverStatus = selectHelper.select("Drivers", columnsForDriverStatus, "ID = \'" + id + "\'",null , null, conn);
-
+           
 	        columnValues.put("ID", id);
 	        columnValues.put("PermitType", permitType);
 	        
