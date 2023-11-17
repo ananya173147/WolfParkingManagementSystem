@@ -370,7 +370,7 @@ public class InformationProcessing {
         
 
         if (column == 1) {
-            Integer value1 = scanner.nextInt();
+        	Integer value1 = Integer.parseInt(scanner.nextLine());
             columnValues.put("Number", value1);
         } else if (column == 2) {
             String value1 = scanner.nextLine();
@@ -422,7 +422,7 @@ public class InformationProcessing {
         System.out.println("Enter Parking Lot Name");
         String LotName = scanner.nextLine();
         columnValues.put("LotName", LotName);
-        System.out.println("Enter LastAction: (parking)");
+        System.out.println("Enter LastAction: (parking/exiting)");
         String lastaction = scanner.nextLine();
         columnValues.put("LastAction", lastaction);
         System.out.println("Enter TimeStamp (Format: yyyy-mm-dd hrs:mins:secs)");

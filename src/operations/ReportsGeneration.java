@@ -220,7 +220,7 @@ public class ReportsGeneration {
         SelectHelper selectHelper = new SelectHelper();
         List<String> columnNames = new ArrayList<>();
         
-        columnNames.add("NumberOfEmployeePermits");
+        columnNames.add("COUNT(*)");
         
         String tableName = "Permits JOIN Drivers ON Permits.ID = Drivers.ID";
         String condition = "Status = 'E' AND ZoneID = " + "'" + zone_id + "'" + " AND LotName = " + "'" + lot_name + "'" ;
@@ -228,7 +228,7 @@ public class ReportsGeneration {
         List<List<Object>> results = selectHelper.select(tableName, columnNames, condition, null, null, null, connection);
         
         List<String> columnNames1 = new ArrayList<>();
-        columnNames1.add("EmployeePermits");
+        columnNames1.add("NumberOfEmployeePermits");
         
         //Printing the result
         if (!results.isEmpty()) {

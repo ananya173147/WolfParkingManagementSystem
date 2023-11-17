@@ -118,7 +118,7 @@ public class MaintainingPermitVehicles {
         columnValues1.put("PermitID", permitId);
 
         System.out.println("Enter Year:");
-        int year = scanner.nextInt();
+        Integer year = Integer.parseInt(scanner.nextLine());
         columnValues1.put("Year", year);
         scanner.nextLine();
 
@@ -194,7 +194,7 @@ public class MaintainingPermitVehicles {
 					break;
 					
         	case 4:	System.out.println("Enter the updated Year: \t");
-					int newYear = scanner.nextInt();
+        			Integer newYear = Integer.parseInt(scanner.nextLine());
 					columnValues.put("Year", newYear);
 					break;
 					

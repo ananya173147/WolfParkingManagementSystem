@@ -201,7 +201,7 @@ public class MaintainingCitations {
 		List<List<Object>> objForDriverDisability = selectHelper.select(tableName, columnsForDriverDisability, "Plate = \'" + plate + '\'', null, null, null, connection);
         
 		String statusOfDriver = objForDriverDisability.get(0).get(0).toString();
-		System.out.println(statusOfDriver);
+		System.out.println("The driver is disabled: "+statusOfDriver);
 		if (statusOfDriver.equals("true")) {
 			System.out.println("The driver is disabled, discounting by 50%, " + (fee/2));
 			columnValues.put("Fee", fee/2);
@@ -242,14 +242,14 @@ public class MaintainingCitations {
         System.out.println("Enter the new value:");
 
         if (column == 1) {
-            Integer value1 = scanner.nextInt();
+            Integer value1 = Integer.parseInt(scanner.nextLine());
             columnValues.put("CitationID", value1);
         } else if (column == 2) {
             String value1 = scanner.nextLine();
             scanner.nextLine();
             columnValues.put("Plate", value1);
         } else if (column == 3) {
-            Integer value1 = scanner.nextInt();
+        	Integer value1 = Integer.parseInt(scanner.nextLine());
             columnValues.put("Number", value1);
         } else if (column == 4) {
             String value1 = scanner.nextLine();
@@ -264,7 +264,7 @@ public class MaintainingCitations {
             columnValues.put("PayStatus", value1);
         }
         else if (column == 7) {
-            Integer value1 = scanner.nextInt();
+        	Integer value1 = Integer.parseInt(scanner.nextLine());
             columnValues.put("Fee", value1);
         }
         else if (column == 8) {
@@ -291,7 +291,6 @@ public class MaintainingCitations {
         String cID = scanner.nextLine();
         columnValues.put("PayStatus", "appealed");
 
-
         String condition = "CitationID=" + ("\"") + cID + ("\"");
         UpdateHelper updateHelper = new UpdateHelper();
         updateHelper.update("Citations", condition, columnValues, connection);
@@ -307,7 +306,6 @@ public class MaintainingCitations {
         String cID = scanner.nextLine();
 
         columnValues.put("PayStatus", "paid");
-
 
         String condition = "CitationID=" + ("\"") + cID + ("\"");
         UpdateHelper updateHelper = new UpdateHelper();
