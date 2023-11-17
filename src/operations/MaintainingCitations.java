@@ -179,6 +179,16 @@ public class MaintainingCitations {
         columnValues.put("CitationID", cId);
         System.out.println("Enter Car Plate Number:");
         String plate = scanner.nextLine();
+        
+        SelectHelper selectHelper1 = new SelectHelper();
+        List<String> columnsForVehicle = List.of("Plate");
+        List<List<Object>> objForVehicle = selectHelper1.select("ModelInfo", columnsForVehicle, "Plate = \'" + plate + '\'', null, null, null, connection);
+        
+        if (objForVehicle.isEmpty()) {
+            System.out.println("Error: Vehicle not found in the table. Please add the vehicle first.");
+            return;
+        }
+        
         columnValues.put("Plate", plate);
         System.out.println("Enter Space Number:");
         Integer s_no = Integer.parseInt(scanner.nextLine());

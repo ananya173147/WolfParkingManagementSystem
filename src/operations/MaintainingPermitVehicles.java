@@ -178,7 +178,7 @@ public class MaintainingPermitVehicles {
         
         switch(choice) {
         	
-        	case 1:	System.out.println("Enter the new Plate Number: \t");
+        	case 1:	System.out.println("Enter the new Plate: \t");
         			String newPlate = scanner.nextLine();
         			columnValues.put("Plate", newPlate);
         			break;
