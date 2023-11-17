@@ -8,6 +8,7 @@ import java.lang.Exception;
 import java.util.Scanner;
 import java.util.HashMap;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Map;
 import java.sql.Statement;
 
@@ -95,75 +96,70 @@ public class InformationProcessing {
     
     public void insertDriverInfo(Connection conn) throws SQLException, IllegalStateException {
     	
+    	// Disable auto-commit to manage transactions manually
     	conn.setAutoCommit(false);
     	
     	try {
+    		// Create a statement object for executing SQL queries
     		Statement statement = conn.createStatement();;
   
+    		// Prompt user to input Driver ID
     		System.out.println("Driver ID: ");
     		String dId = scanner.nextLine();
     		
+    		// Prompt user to input Driver name
     		System.out.println("Enter Driver name:");
     		String dname = scanner.nextLine();
     		
+    		// Prompt user to input Status
     		System.out.println("Enter Status:");
     		String status = scanner.nextLine();
     		
+    		// Prompt user to input isDisabled status (true/false)
     		System.out.println("isDisabled? (Type true/false)");
     		boolean isDisabled = false;
     		
     		try {
+    			// Try to read a boolean value from user input
     			isDisabled = scanner.nextBoolean();
     		} catch (InputMismatchException e) {
+    			// Handle exception if the input is not a valid boolean
     			scanner.nextLine();
     			System.out.println("Error: InputMismatchException occurred. Please enter valid input for 'isDisabled' field");
     			e.printStackTrace();
+    			// Set auto-commit to true and return from the method
     			conn.setAutoCommit(true);
     			return;
     		}
     		
+    		// Create SQL INSERT statement with user inputs
     		String insertStatement = "INSERT INTO Drivers VALUES ('" + dId + "','" + dname + "','" + status + "'," + isDisabled + ");";
+    		
+    		// Execute the SQL INSERT statement
     		statement.executeUpdate(insertStatement);
+    		
+    		// Commit the transaction
     		conn.commit();
     		
     	} catch(Exception e){
-    		System.out.println("Exception occured: " + e.getMessage());
-    		conn.rollback();
+    		// Handle any exceptions that occur during the execution of the code within the try block
+    	    System.out.println("Exception occurred: " + e.getMessage());
+
+    	    // Roll back the transaction in case of an exception
+    	    conn.rollback();
+    	    
+    	 // Set auto-commit to true and return from the method
+			conn.setAutoCommit(true);
     	} finally {
-    		conn.setAutoCommit(true);
+    		// Set auto-commit back to true in the finally block to ensure it happens regardless of whether an exception occurred or not
+    	    conn.setAutoCommit(true);
     	}
     }
-    	
-
-    /*public void insertDriverInfo(Connection conn) throws SQLException, IllegalStateException {
-    	//insert operation on basic info for Driver
-        Map<String, Object> columnValues = new HashMap<>();
-        System.out.println("Driver ID: ");
-        String dId = scanner.nextLine();
-        columnValues.put("ID", dId);
-        System.out.println("Enter Driver name:");
-        String dname = scanner.nextLine();
-        columnValues.put("Name", dname);
-        System.out.println("Enter Status:");
-        String status = scanner.nextLine();
-        columnValues.put("Status", status);
-        System.out.println("isDisabled? (Type true/false)");
-        boolean isDisabled = false;
-        try {
-            isDisabled = scanner.nextBoolean();
-        } catch (InputMismatchException e) {
-            scanner.nextLine();
-            System.out.println("Error: InputMismatchException occurred. Please enter valid input for 'isDisabled' field");
-            e.printStackTrace();
-        }
-        columnValues.put("isDisabled", isDisabled);
-        InsertHelper insertHelper = new InsertHelper();
-        insertHelper.insertQuery(columnValues, "Drivers", conn);
-    }
-    */
 
     public void UpdateDriverInfo(Connection conn) {
-        //update operation on basic info for driver
+    	// Update operation on basic driver information
+    	
+    	// Map to store column-value pairs for the update
         Map<String, Object> columnValues = new HashMap<>();
 
         System.out.println("Choose the column to update:");
@@ -172,9 +168,22 @@ public class InformationProcessing {
         System.out.println("3. Status");
         System.out.println("4. isDisabled");
         System.out.println("Enter your choice: \t");
+        
         Integer column = Integer.parseInt(scanner.nextLine());
+        
         System.out.println("Enter the Driver ID to confirm the update operation:");
         String dId = scanner.nextLine();
+        
+        List<String> columnsForDriverStatus = List.of("ID");
+        SelectHelper selectHelper = new SelectHelper();
+		List<List<Object>> objForDriver = selectHelper.select("Drivers", columnsForDriverStatus, "ID = \'" + dId + '\'', null, null, null, conn);
+        
+        // If the result is empty, the driver was not found
+        if (objForDriver.isEmpty()) {
+            System.out.println("Error: Driver not found in the table. Please add the driver first.");
+            return;
+        }
+        
         System.out.println("Enter the new value:");
 
         if (column == 1) {
@@ -195,23 +204,24 @@ public class InformationProcessing {
         	System.out.println("Invalid option selected, Please try again! \n");
         	return;
         }
+        
         String condition = "ID=" + ("\"") + dId + ("\"");
+        
         UpdateHelper updateHelper = new UpdateHelper();
         updateHelper.update("Drivers", condition, columnValues, conn);
     }
 
     public void DeleteDriverInfo(Connection conn){
-        //delete operation on basic info for Driver
+        //Delete operation on basic info for Driver
         System.out.println("Provide the Driver ID which you want to delete:");
     	String value = scanner.nextLine();
-        String condition = "null";
-        condition = "ID=" + ("\"") + value + ("\""); 
+        String condition = "ID=" + ("\"") + value + ("\""); 
         DeleteHelper deleteHelper = new DeleteHelper();
         deleteHelper.delete("Drivers", condition, conn);
     }
 
     public void insertLotInfo(Connection conn) throws SQLException {
-        //insert operation on inserting driver info to the DB
+        //Insert operation on inserting driver info to the DB
         Map<String, Object> columnValues = new HashMap<>();
         System.out.println("Enter Parking Lot Name ");
         String lotname = scanner.nextLine();
@@ -225,7 +235,7 @@ public class InformationProcessing {
     }
 
     public void UpdateLotInfo(Connection conn) {
-        //update operation on basic info for driver
+        //Update operation on basic info for driver
         Map<String, Object> columnValues = new HashMap<>();
 
         System.out.println("Choose the column you wish to update:");
@@ -234,8 +244,10 @@ public class InformationProcessing {
 
         System.out.println("Enter your choice: \t");
         Integer column = Integer.parseInt(scanner.nextLine());
+        
         System.out.println("Enter the LotName for the update operation:");
         String LotName = scanner.nextLine();
+        
         System.out.println("Enter the new value:");
 
         if (column == 1) {
@@ -255,17 +267,16 @@ public class InformationProcessing {
     }
 
     public void DeleteLotInfo(Connection conn){
-        //delete operation on basic info for Driver
+        //Delete operation on basic info for Driver
         System.out.println("Provide the LotName which you want to delete:");
     	String value = scanner.nextLine();
-        String condition = "null";
-        condition = "LotName=" + ("\"") + value + ("\""); 
+        String condition = "LotName=" + ("\"") + value + ("\""); 
         DeleteHelper deleteHelper = new DeleteHelper();
         deleteHelper.delete("ParkingLots", condition, conn);
     }
 
     public void insertZoneInfo(Connection conn) throws SQLException {
-        //insert operation on inserting driver info to the DB
+        //Insert operation on inserting driver info to the DB
         Map<String, Object> columnValues = new HashMap<>();
         System.out.println("Enter Zone ID ");
         String ZoneID = scanner.nextLine();
@@ -280,7 +291,7 @@ public class InformationProcessing {
     }
 
     public void UpdateZoneInfo(Connection conn) {
-        //update operation on basic info for driver
+        //Update operation on basic info for driver
         Map<String, Object> columnValues = new HashMap<>();
 
         System.out.println("Choose the column to wish update:");
@@ -315,7 +326,7 @@ public class InformationProcessing {
     }
 
     public void DeleteZoneInfo(Connection conn){
-        //delete operation on basic info for Driver
+        //Delete operation on basic info for Driver
         System.out.println("Provide the ZoneID which you want to delete:");
     	String value = scanner.nextLine();
     	System.out.println("Provide the LotName for the zone which you want to delete:");
@@ -326,28 +337,44 @@ public class InformationProcessing {
         deleteHelper.delete("ParkingLots", condition, conn);
     }
 
-     public void insertSpaceInfo(Connection conn) throws SQLException {
-        //insert operation on inserting driver info to the DB
-        Map<String, Object> columnValues = new HashMap<>();
-        System.out.println("Enter Space Number: ");
-        Integer snumber = Integer.parseInt(scanner.nextLine());
-        columnValues.put("Number", snumber);
-        System.out.println("Enter Space Type:");
-        String stype = scanner.nextLine();
-        scanner.nextLine();
-        columnValues.put("SpaceType", stype);
-        System.out.println("Enter ZoneID:");
-        String ZoneID = scanner.nextLine();
-        columnValues.put("ZoneID", ZoneID);
-        System.out.println("Enter LotName");
-        String LotName = scanner.nextLine();
-        columnValues.put("LotName", LotName);
-        InsertHelper insertHelper = new InsertHelper();
-        insertHelper.insertQuery(columnValues, "Spaces", conn);
+    public void insertSpaceInfo(Connection conn) throws SQLException {
+      	 
+    	//Using transactions to insert new spaces
+    	conn.setAutoCommit(false);
+    	 
+        try {
+        	
+        	Statement statement = conn.createStatement();
+        	
+        	System.out.println("Enter Space Number: ");
+        	Integer snumber = Integer.parseInt(scanner.nextLine());
+        	
+        	System.out.println("Enter Space Type:");
+        	String stype = scanner.nextLine();
+        	
+        	System.out.println("Enter ZoneID:");
+        	String ZoneID = scanner.nextLine();
+        	
+        	System.out.println("Enter LotName");
+        	String LotName = scanner.nextLine();
+        	
+        	String insertStatement = "INSERT INTO Spaces VALUES (" + snumber + ",'" + stype + "','" + ZoneID + "','" + LotName + "');";
+    		statement.executeUpdate(insertStatement);
+    		
+    		conn.commit();
+    		System.out.println("Space added successfully!");
+        	
+        } catch(Exception e){
+        	System.out.println("Exception occured: " + e.getMessage());
+        	conn.rollback();
+        	conn.setAutoCommit(true);
+        } finally {
+        	conn.setAutoCommit(true);
+        }
     }
     
     public void UpdateSpaceInfo(Connection conn) {
-        //update operation on basic info for driver
+        //Update operation on basic info for driver
         Map<String, Object> columnValues = new HashMap<>();
 
         System.out.println("Choose the column you wish to update:");
@@ -394,7 +421,7 @@ public class InformationProcessing {
     }
 
     public void DeleteSpaceInfo(Connection conn){
-        //delete operation on basic info for Driver
+        //Delete operation on basic info for Driver
         System.out.println("Provide the Space Number which you want to delete:");
     	Integer value = Integer.parseInt(scanner.nextLine());
     	System.out.println("Provide the ZoneID which you want to delete:");
@@ -408,7 +435,7 @@ public class InformationProcessing {
     }
 
     public void ParkVehicle(Connection conn) throws SQLException {
-        //insert operation on inserting driver info to the DB
+        //Insert operation on inserting driver info to the DB
         Map<String, Object> columnValues = new HashMap<>();
         System.out.println("Enter Plate:");
         String plate = scanner.nextLine();
@@ -433,7 +460,7 @@ public class InformationProcessing {
     }
 
     public void ExitParking(Connection conn) throws SQLException {
-        //insert operation on inserting driver info to the DB
+        //Insert operation on inserting driver info to the DB
         Map<String, Object> columnValues = new HashMap<>();
         System.out.println("Enter Plate:");
         String plate = scanner.nextLine();
