@@ -1,6 +1,25 @@
 # Wolf Parking Management System
+We designed and implemented the Wolf Parking Management System to efficiently manage
+parking lots and their users on a university campus. The key information to be maintained in the
+database includes driver details, parking lot information, zone information, space information,
+permit information, vehicle information, and citation information. The system will cater to the
+needs of administrators responsible for overseeing parking services like managing parking lots
+and permits, the security for handling citations, and the drivers to view and pay or appeal their
+citations. These tasks are implemented through four major categories: information processing,
+maintaining permits and vehicle information for each driver, generating and maintaining
+citations, and generating reports for citations, current violations, the list of assigned permits,
+and other statistics related to parking information.
 
-The Wolf Parking Management System is a database management system developed using JDBC for efficient parking space management.
+Given that multiple users will be simultaneously accessing and updating information within the
+parking system, we require a robust database system instead of relying on a simple file system. It
+enables concurrent access and ensures data integrity, allowing multiple users to interact with
+the system without the risk of overwriting or conflicting with each other's updates. This
+guarantees that driver details, permit information, and citation records remain accurate and
+consistent, even when accessed and modified by administrators, security personnel, and drivers
+concurrently. Moreover, databases facilitate efficient data management and retrieval. Queries
+can swiftly extract specific information, eliminating the need to manually search through
+potentially outdated files. Unlike traditional file systems, which may require reloading or
+rewriting entire files, databases provide real-time access to the most up-to-date information.
 
 ## Installation
 
