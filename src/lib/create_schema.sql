@@ -13,7 +13,7 @@ SET FOREIGN_KEY_CHECKS = 1;
 CREATE TABLE Drivers (
 	ID VARCHAR(10),
 	Name VARCHAR(128) NOT NULL,
-	Status ENUM('S', 'E', 'V') NOT NULL,
+	Status ENUM('S', 'E', 'V', 'F') NOT NULL,
 	isDisabled BOOLEAN NOT NULL,
 	PRIMARY KEY(ID)
 );

@@ -109,7 +109,7 @@ public class MaintainingPermitVehicles {
         int maxVehiclesAllowed = "E".equalsIgnoreCase(statusOfDriver) ? 2 : 1;
 
         // If the driver has reached the maximum allowed vehicles, inform the user
-        if (objForPermitVehicles.size() >= maxVehiclesAllowed) {
+        if (!"F".equalsIgnoreCase(statusOfDriver) && objForPermitVehicles.size() >= maxVehiclesAllowed) {
             System.out.println("Error: The driver already has the maximum allowed vehicles on the permit.");
             return;
         }
@@ -304,25 +304,32 @@ public class MaintainingPermitVehicles {
 	        String permitType = scanner.nextLine();
 	        
 	        // Limit the number of permits based on the driver's status and permit type
-            int maxPermitsAllowed = 1; // Default to 1 permit
-            
-            if ("special event".equals(permitType) || "park & ride".equals(permitType)) {
-	        	if ("E".equalsIgnoreCase(statusOfDriver)) {
-	                maxPermitsAllowed = 3;
-	            } else if ("S".equalsIgnoreCase(statusOfDriver)){
-	                maxPermitsAllowed = 2;
+	        int maxPermitsAllowed;
+
+	        if ("F".equalsIgnoreCase(statusOfDriver)) {
+	            // Driver with status F can have any number of permits
+	            maxPermitsAllowed = Integer.MAX_VALUE;
+	        } else {
+	            maxPermitsAllowed = 1; // Default to 1 permit
+
+	            if ("special event".equals(permitType) || "park & ride".equals(permitType)) {
+	                if ("E".equalsIgnoreCase(statusOfDriver)) {
+	                    maxPermitsAllowed = 3;
+	                } else if ("S".equalsIgnoreCase(statusOfDriver)) {
+	                    maxPermitsAllowed = 2;
+	                }
+	            } else {
+	                if ("E".equalsIgnoreCase(statusOfDriver)) {
+	                    maxPermitsAllowed = 2;
+	                }
 	            }
 	        }
-	        else {
-	            if ("E".equalsIgnoreCase(statusOfDriver)) {
-	                maxPermitsAllowed = 2;
-	            }
+
+	        // If the driver has reached the maximum allowed permits, inform the user
+	        if (objForExistingPermits.size() >= maxPermitsAllowed) {
+	            System.out.println("Error: The driver already has the maximum allowed permits for the given status.");
+	            return;
 	        }
-            // If the driver has reached the maximum allowed permits, inform the user
-            if (objForExistingPermits.size() >= maxPermitsAllowed) {
-                System.out.println("Error: The driver already has the maximum allowed permits for the given status.");
-                return;
-            }
             
 //        List<String> columnsForDriverStatus = List.of("Permit");
 //        List<List<Object>> objForDriverStatus = selectHelper.select("Drivers", columnsForDriverStatus, "ID = \'" + id + "\'",null , null, conn);

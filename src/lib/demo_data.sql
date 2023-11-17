@@ -7,7 +7,7 @@ VALUES
 (466399121, 'Ivan Garcia', 'E', false),
 (122765234, 'Sachin Tendulkar', 'S', false), 
 (9194789124, 'Charles Xavier', 'V', true),
-(0, 'No Driver', 'V', false);
+(0, 'No Driver', 'F', false);
 
 DELETE FROM ParkingLots WHERE 1=1;
 INSERT INTO ParkingLots (LotName, Address)
