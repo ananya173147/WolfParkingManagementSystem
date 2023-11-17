@@ -458,7 +458,7 @@ public class MaintainingPermitVehicles {
     	System.out.println("Enter the Permit ID you want to delete: ");
     	String permit = scanner.nextLine();
     	
-    	String condition = "Permit = \'" + permit + "\'";
+    	String condition = "PermitID = \'" + permit + "\'";
     	DeleteHelper deleteHelper = new DeleteHelper();
         deleteHelper.delete("Permits", condition, conn);
     	

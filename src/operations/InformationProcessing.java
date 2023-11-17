@@ -338,40 +338,47 @@ public class InformationProcessing {
     }
 
     public void insertSpaceInfo(Connection conn) throws SQLException {
-      	 
-    	//Using transactions to insert new spaces
-    	conn.setAutoCommit(false);
-    	 
+        // Using transactions to insert new spaces
+        conn.setAutoCommit(false);
+
         try {
-        	
-        	Statement statement = conn.createStatement();
-        	
-        	System.out.println("Enter Space Number: ");
-        	Integer snumber = Integer.parseInt(scanner.nextLine());
-        	
-        	System.out.println("Enter Space Type:");
-        	String stype = scanner.nextLine();
-        	
-        	System.out.println("Enter ZoneID:");
-        	String ZoneID = scanner.nextLine();
-        	
-        	System.out.println("Enter LotName");
-        	String LotName = scanner.nextLine();
-        	
-        	String insertStatement = "INSERT INTO Spaces VALUES (" + snumber + ",'" + stype + "','" + ZoneID + "','" + LotName + "');";
-    		statement.executeUpdate(insertStatement);
-    		
-    		conn.commit();
-    		System.out.println("Space added successfully!");
-        	
+            // Creating a statement for SQL queries
+            Statement statement = conn.createStatement();
+
+            // Taking user input for space information
+            System.out.println("Enter Space Number: ");
+            Integer snumber = Integer.parseInt(scanner.nextLine());
+
+            System.out.println("Enter Space Type:");
+            String stype = scanner.nextLine();
+
+            System.out.println("Enter ZoneID:");
+            String ZoneID = scanner.nextLine();
+
+            System.out.println("Enter LotName");
+            String LotName = scanner.nextLine();
+
+            // Building the SQL INSERT statement
+            String insertStatement = "INSERT INTO Spaces VALUES (" + snumber + ",'" + stype + "','" + ZoneID + "','" + LotName + "');";
+
+            // Executing the SQL INSERT statement
+            statement.executeUpdate(insertStatement);
+
+            // Committing the transaction as the insertion was successful
+            conn.commit();
+            System.out.println("Space added successfully!");
+
         } catch(Exception e){
-        	System.out.println("Exception occured: " + e.getMessage());
-        	conn.rollback();
-        	conn.setAutoCommit(true);
+            // Handling exceptions and rolling back the transaction if an error occurs
+            System.out.println("Exception occurred: " + e.getMessage());
+            conn.rollback();
+            conn.setAutoCommit(true);
         } finally {
-        	conn.setAutoCommit(true);
+            // Ensuring that auto-commit is set to true before leaving the method
+            conn.setAutoCommit(true);
         }
     }
+
     
     public void UpdateSpaceInfo(Connection conn) {
         //Update operation on basic info for driver
