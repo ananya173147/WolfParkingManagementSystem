@@ -11,7 +11,7 @@ public class ConnHelper {
 
         String url = "jdbc:mariadb://classdb2.csc.ncsu.edu:3306/agarg27";
         String user = "agarg27";
-        String pswd = "teamg";
+        String pswd = DB_PASSWORD;
         
         try{
             conn = DriverManager.getConnection(url, user, pswd);
