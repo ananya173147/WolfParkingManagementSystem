@@ -45,7 +45,7 @@ Using the MariaDB terminal on the remote server
     -	enter your unity ID password
 3.	Access the database:
     /mnt/apps/public/CSC/Mysql-Shell/bin/mysql -u agarg27 -p -h classdb2.csc.ncsu.edu 
-4.	Enter password: teamg
+4.	Enter password
     ```
     MySQL Shell 8.0.25  
     Copyright (c) 2016, 2021, Oracle and/or its affiliates.
