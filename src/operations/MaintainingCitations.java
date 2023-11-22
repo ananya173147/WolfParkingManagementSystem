@@ -203,6 +203,11 @@ public class MaintainingCitations {
         System.out.println("Enter Payment Status:");
         String pStatus = scanner.nextLine();
         columnValues.put("PayStatus", pStatus);
+	    
+	System.out.println("Enter Category:");
+        String pCategory = scanner.nextLine();
+	columnValues.put("Category", pCategory);
+	    
         System.out.println("Enter Fee:");
         Float fee = Float.parseFloat(scanner.nextLine());
         List<String> columnsForDriverDisability = List.of("isDisabled");
