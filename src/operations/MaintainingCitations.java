@@ -182,7 +182,7 @@ public class MaintainingCitations {
         
         SelectHelper selectHelper1 = new SelectHelper();
         List<String> columnsForVehicle = List.of("Plate");
-        List<List<Object>> objForVehicle = selectHelper1.select("ModelInfo", columnsForVehicle, "Plate = \'" + plate + '\'', null, null, null, connection);
+        List<List<Object>> objForVehicle = selectHelper1.select("Vehicles", columnsForVehicle, "Plate = \'" + plate + '\'', null, null, null, connection);
         
         if (objForVehicle.isEmpty()) {
             System.out.println("Error: Vehicle not found in the table. Please add the vehicle first.");
