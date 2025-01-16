@@ -21,6 +21,10 @@ can swiftly extract specific information, eliminating the need to manually searc
 potentially outdated files. Unlike traditional file systems, which may require reloading or
 rewriting entire files, databases provide real-time access to the most up-to-date information.
 
+## ER Diagram
+![image](https://github.com/user-attachments/assets/e2f73ebf-76f9-4df9-98cd-3f9e0612a746)
+
+
 ## Installation
 
 Follow these steps to install and set up the Wolf Parking Management System.
